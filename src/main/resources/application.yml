@@ -5,9 +5,11 @@ spring:
   jpa:
     open-in-view: false
     hibernate:
-      ddl-auto: validate
+      ddl-auto: update
   datasource:
     url: jdbc:mysql://localhost:3306/springbatch?useUnicode=true&characterEncoding=utf8
     username: root
     password: root
     driver-class-name: com.mysql.cj.jdbc.Driver
+  profiles:
+    include: oauth
