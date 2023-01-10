@@ -2,6 +2,7 @@ package com.practice.kopring.member.domain.dto
 
 import com.practice.kopring.member.domain.entity.MemberEntity
 import com.practice.kopring.member.domain.enumerate.Role
+import java.io.Serializable
 
 class MemberDto {
     data class OAuthAttributes(
@@ -26,6 +27,14 @@ class MemberDto {
                 )
             }
         }
+    }
+
+    data class SessionUser(
+        private val member: MemberEntity
+    ) : Serializable {
+        val name = member.name
+        val email = member.email
+        val picture = member.picture
     }
 }
 

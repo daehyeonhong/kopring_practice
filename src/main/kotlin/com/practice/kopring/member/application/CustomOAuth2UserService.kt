@@ -21,7 +21,7 @@ class CustomOAuth2UserService(
     private val memberRepository: MemberRepository
 ) : OAuth2UserService<OAuth2UserRequest, OAuth2User> {
     override fun loadUser(userRequest: OAuth2UserRequest?): OAuth2User {
-        if (userRequest == null) throw OAuth2AuthenticationException("Error")
+        userRequest ?: throw OAuth2AuthenticationException("Error")
         val delegate: DefaultOAuth2UserService = DefaultOAuth2UserService()
         val oAuth2User: OAuth2User = delegate.loadUser(userRequest)
 
