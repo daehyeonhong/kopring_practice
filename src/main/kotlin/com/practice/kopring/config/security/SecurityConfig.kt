@@ -3,6 +3,7 @@ package com.practice.kopring.config.security
 import com.practice.kopring.member.application.CustomOAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -22,6 +23,11 @@ class SecurityConfig(
                 it.userInfoEndpoint().userService(this.customOAuth2UserService)
                 it.defaultSuccessUrl("/auth/login")
                 it.failureUrl("/fail")
+            }
+            .authorizeHttpRequests {
+                it.requestMatchers("/auth/login").permitAll()
+                it.requestMatchers(HttpMethod.GET, "/members").permitAll()
+                it.anyRequest().authenticated()
             }
             .build()
     }
