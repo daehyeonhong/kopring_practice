@@ -1,6 +1,6 @@
 package com.practice.kopring.member.domain.entity
 
-import com.practice.kopring.common.domain.BaseEntity
+import com.practice.kopring.common.domain.entity.BaseEntity
 import com.practice.kopring.member.domain.enumerate.Role
 import jakarta.persistence.*
 

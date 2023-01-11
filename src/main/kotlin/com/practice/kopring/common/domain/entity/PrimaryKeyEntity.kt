@@ -1,4 +1,4 @@
-package com.practice.kopring.common.domain
+package com.practice.kopring.common.domain.entity
 
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.Id

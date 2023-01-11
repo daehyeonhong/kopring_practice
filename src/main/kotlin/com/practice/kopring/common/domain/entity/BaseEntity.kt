@@ -1,4 +1,4 @@
-package com.practice.kopring.common.domain
+package com.practice.kopring.common.domain.entity
 
 import jakarta.persistence.Column
 import jakarta.persistence.EntityListeners
