@@ -1,11 +1,11 @@
-package com.practice.kopring.member.domain.entity
+package com.practice.kopring.user.domain.entity
 
 import com.practice.kopring.common.domain.entity.BaseEntity
-import com.practice.kopring.member.domain.enumerate.Role
+import com.practice.kopring.user.domain.enumerate.Role
 import jakarta.persistence.*
 
 @Entity
-class MemberEntity(
+class UserEntity(
     @Column(nullable = false)
     var name: String,
 

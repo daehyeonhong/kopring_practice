@@ -1,4 +1,4 @@
-package com.practice.kopring.member.domain.enumerate
+package com.practice.kopring.user.domain.enumerate
 
 enum class Role(
     val key: String,

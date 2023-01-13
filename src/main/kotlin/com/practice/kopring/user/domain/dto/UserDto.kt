@@ -1,10 +1,10 @@
-package com.practice.kopring.member.domain.dto
+package com.practice.kopring.user.domain.dto
 
-import com.practice.kopring.member.domain.entity.MemberEntity
-import com.practice.kopring.member.domain.enumerate.Role
+import com.practice.kopring.user.domain.entity.UserEntity
+import com.practice.kopring.user.domain.enumerate.Role
 import java.io.Serializable
 
-class MemberDto {
+class UserDto {
     data class OAuthAttributes(
         val attributes: Map<String, Any>,
         val nameAttributeKey: String,
@@ -30,7 +30,7 @@ class MemberDto {
     }
 
     data class SessionUser(
-        private val member: MemberEntity
+        private val member: UserEntity
     ) : Serializable {
         val name = member.name
         val email = member.email
@@ -38,8 +38,8 @@ class MemberDto {
     }
 }
 
-fun MemberDto.OAuthAttributes.toEntity(): MemberEntity {
-    return MemberEntity(
+fun UserDto.OAuthAttributes.toEntity(): UserEntity {
+    return UserEntity(
         name = name,
         email = email,
         picture = picture,
