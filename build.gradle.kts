@@ -55,6 +55,8 @@ dependencies {
     //JWT Dependency
     implementation("com.auth0:java-jwt:4.2.1")
 
+    implementation("com.github.f4b6a3:ulid-creator:5.1.0")
+
 
     runtimeOnly("com.mysql:mysql-connector-j")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
