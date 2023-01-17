@@ -8,6 +8,7 @@ class UserDto {
     data class OAuthAttributes(
         val attributes: Map<String, Any>,
         val nameAttributeKey: String,
+        val registrationId: String,
         val name: String,
         val email: String,
         val picture: String
@@ -19,11 +20,12 @@ class UserDto {
                 attributes: Map<String, Any>
             ): OAuthAttributes {
                 return OAuthAttributes(
+                    registrationId = registrationId,
+                    nameAttributeKey = userNameAttributeName,
                     name = attributes["name"] as String,
                     email = attributes["email"] as String,
                     picture = attributes["picture"] as String,
-                    attributes = attributes,
-                    nameAttributeKey = userNameAttributeName
+                    attributes = attributes
                 )
             }
         }
@@ -43,6 +45,7 @@ fun UserDto.OAuthAttributes.toEntity(): UserEntity {
         name = name,
         email = email,
         picture = picture,
+        registrationId = registrationId,
         role = Role.USER
     )
 }

@@ -8,6 +8,7 @@ import jakarta.persistence.*
 class UserEntity(
     name: String,
     email: String,
+    registrationId: String,
     @Column
     var picture: String,
 
@@ -23,4 +24,16 @@ class UserEntity(
     @Column(unique = true, nullable = false)
     var email = email
         protected set
+
+    @Column(nullable = false)
+    var registrationId = registrationId
+        protected set
+
+    fun loginUpdate(
+        name: String,
+        picture: String
+    ): Unit {
+        this.name = name
+        this.picture = picture
+    }
 }
