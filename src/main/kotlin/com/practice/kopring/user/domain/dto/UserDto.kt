@@ -2,13 +2,11 @@ package com.practice.kopring.user.domain.dto
 
 import com.practice.kopring.user.domain.entity.UserEntity
 import com.practice.kopring.user.domain.enumerate.Role
-import java.io.Serializable
 
 class UserDto {
     data class OAuthAttributes(
         val attributes: Map<String, Any>,
         val nameAttributeKey: String,
-        val registrationId: String,
         val name: String,
         val email: String,
         val picture: String
@@ -19,24 +17,33 @@ class UserDto {
                 userNameAttributeName: String,
                 attributes: Map<String, Any>
             ): OAuthAttributes {
+                return when (registrationId) {
+                    "google" -> ofGoogle(userNameAttributeName, attributes)
+                    else -> throw IllegalArgumentException()
+                }
+            }
+
+            private fun ofGoogle(attributeKey: String, attributes: Map<String, Any>): OAuthAttributes {
                 return OAuthAttributes(
-                    registrationId = registrationId,
-                    nameAttributeKey = userNameAttributeName,
+                    nameAttributeKey = attributeKey,
                     name = attributes["name"] as String,
                     email = attributes["email"] as String,
                     picture = attributes["picture"] as String,
                     attributes = attributes
                 )
             }
-        }
-    }
 
-    data class SessionUser(
-        private val member: UserEntity
-    ) : Serializable {
-        val name = member.name
-        val email = member.email
-        val picture = member.picture
+        }
+
+        fun convertToMap(): Map<String, Any> {
+            return mapOf<String, Any>(
+                "id" to nameAttributeKey,
+                "key" to nameAttributeKey,
+                "name" to name,
+                "email" to email,
+                "picture" to picture
+            )
+        }
     }
 }
 
@@ -45,7 +52,6 @@ fun UserDto.OAuthAttributes.toEntity(): UserEntity {
         name = name,
         email = email,
         picture = picture,
-        registrationId = registrationId,
         role = Role.USER
     )
 }
