@@ -1,23 +1,20 @@
 package com.practice.kopring.user.domain.dto
 
-import com.practice.kopring.user.domain.entity.UserEntity
-import com.practice.kopring.user.domain.enumerate.Role
-
 class UserDto {
     data class OAuthAttributes(
         val attributes: Map<String, Any>,
         val nameAttributeKey: String,
-        val name: String,
         val email: String,
+        val name: String,
         val picture: String
     ) {
         companion object {
             fun of(
-                registrationId: String,
+                provider: String,
                 userNameAttributeName: String,
                 attributes: Map<String, Any>
             ): OAuthAttributes {
-                return when (registrationId) {
+                return when (provider) {
                     "google" -> ofGoogle(userNameAttributeName, attributes)
                     else -> throw IllegalArgumentException()
                 }
@@ -32,7 +29,6 @@ class UserDto {
                     attributes = attributes
                 )
             }
-
         }
 
         fun convertToMap(): Map<String, Any> {
@@ -45,13 +41,4 @@ class UserDto {
             )
         }
     }
-}
-
-fun UserDto.OAuthAttributes.toEntity(): UserEntity {
-    return UserEntity(
-        name = name,
-        email = email,
-        picture = picture,
-        role = Role.USER
-    )
 }
