@@ -49,17 +49,18 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.data:spring-data-rest-hal-explorer")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
-    testImplementation("org.springframework.security:spring-security-test")
-    developmentOnly("org.springframework.boot:spring-boot-devtools")
+    implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     //JWT Dependency
     implementation("com.auth0:java-jwt:4.2.1")
 
     implementation("com.github.f4b6a3:ulid-creator:5.1.0")
 
+    developmentOnly("org.springframework.boot:spring-boot-devtools")
 
     runtimeOnly("com.mysql:mysql-connector-j")
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
+    testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.security:spring-security-test")
