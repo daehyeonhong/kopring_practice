@@ -1,6 +1,6 @@
 package com.practice.kopring.user.application
 
-import com.practice.kopring.user.domain.dto.UserDto.OAuthAttributes
+import com.practice.kopring.user.domain.dto.OAuthAttributes
 import com.practice.kopring.user.domain.entity.UserEntity
 import com.practice.kopring.user.domain.enumerate.Role
 import com.practice.kopring.user.infrastructure.UserRepository
