@@ -1,4 +1,4 @@
-package com.practice.kopring.config.security
+package com.practice.kopring.oauth.filter
 
 import com.practice.kopring.auth.application.JwtTokenProvider
 import jakarta.servlet.FilterChain

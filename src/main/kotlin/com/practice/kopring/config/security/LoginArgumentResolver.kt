@@ -1,6 +1,10 @@
 package com.practice.kopring.config.security
 
+import com.practice.kopring.oauth.config.AuthInfo
+import com.practice.kopring.oauth.dto.AuthUser
 import com.practice.kopring.user.domain.enumerate.Role
+import java.util.Objects
+import java.util.UUID
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -10,7 +14,6 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
-import java.util.*
 
 @Component
 class LoginArgumentResolver : HandlerMethodArgumentResolver {

@@ -1,7 +1,7 @@
 package com.practice.kopring.user.domain.enumerate
 
 import java.security.InvalidKeyException
-import java.util.*
+import java.util.Arrays
 
 enum class Role(
     val key: String,

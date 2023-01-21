@@ -1,7 +1,8 @@
 package com.practice.kopring.config.security
 
 import com.practice.kopring.auth.application.JwtTokenProvider
-import com.practice.kopring.config.security.handler.OAuth2SuccessHandler
+import com.practice.kopring.oauth.filter.JwtFilter
+import com.practice.kopring.oauth.handler.OAuth2SuccessHandler
 import com.practice.kopring.user.application.CustomOAuth2UserService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration

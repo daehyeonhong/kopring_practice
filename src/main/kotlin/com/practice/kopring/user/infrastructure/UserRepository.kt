@@ -1,9 +1,9 @@
 package com.practice.kopring.user.infrastructure
 
 import com.practice.kopring.user.domain.entity.UserEntity
+import java.util.UUID
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 interface UserRepository : JpaRepository<UserEntity, UUID> {

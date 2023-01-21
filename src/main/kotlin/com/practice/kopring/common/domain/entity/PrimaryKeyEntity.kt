@@ -6,13 +6,14 @@ import jakarta.persistence.Id
 import jakarta.persistence.MappedSuperclass
 import jakarta.persistence.PostLoad
 import jakarta.persistence.PostPersist
+import java.io.Serializable
+import java.time.LocalDateTime
+import java.util.Objects
+import java.util.UUID
 import org.hibernate.proxy.HibernateProxy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.domain.Persistable
-import java.io.Serializable
-import java.time.LocalDateTime
-import java.util.*
 
 @MappedSuperclass
 abstract class PrimaryKeyEntity : Persistable<UUID> {
