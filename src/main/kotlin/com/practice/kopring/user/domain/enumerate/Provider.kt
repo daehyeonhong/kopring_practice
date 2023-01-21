@@ -1,17 +1,17 @@
 package com.practice.kopring.user.domain.enumerate
 
-import java.util.*
+import java.util.Arrays
 
 enum class Provider(
-    val description: String
 ) {
-    GOOGLE(description = "google"),
-    NONE(description = "none");
+    GOOGLE,
+    FACEBOOK,
+    NONE;
 
     companion object {
         fun of(description: String?): Provider =
             Arrays.stream(values())
-                .filter { it.description == description }
+                .filter { it.name.equals(description, true) }
                 .findAny()
                 .orElse(NONE)
     }

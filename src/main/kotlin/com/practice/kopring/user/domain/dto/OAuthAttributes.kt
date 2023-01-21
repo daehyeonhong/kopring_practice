@@ -1,5 +1,7 @@
 package com.practice.kopring.user.domain.dto
 
+import com.practice.kopring.user.domain.enumerate.Provider
+
 
 data class OAuthAttributes(
     val attributes: Map<String, Any>,
@@ -10,14 +12,21 @@ data class OAuthAttributes(
 ) {
     companion object {
         fun of(
-            provider: String,
-            userNameAttributeName: String,
-            attributes: Map<String, Any>
-        ): OAuthAttributes {
-            return when (provider) {
-                "google" -> ofGoogle(userNameAttributeName, attributes)
-                else -> throw IllegalArgumentException(provider)
-            }
+            provider: String, userNameAttributeName: String, attributes: Map<String, Any>
+        ): OAuthAttributes = when (Provider.of(provider)) {
+            Provider.GOOGLE -> ofGoogle(userNameAttributeName, attributes)
+            Provider.FACEBOOK -> ofFacebook(userNameAttributeName, attributes)
+            Provider.NONE -> throw IllegalArgumentException(provider)
+        }
+
+        private fun ofFacebook(attributeKey: String, attributes: Map<String, Any>): OAuthAttributes {
+            return OAuthAttributes(
+                nameAttributeKey = attributeKey,
+                name = attributes["name"] as String,
+                email = attributes["email"] as String,
+                picture = attributes["picture"] as String,
+                attributes = attributes
+            )
         }
 
         private fun ofGoogle(attributeKey: String, attributes: Map<String, Any>): OAuthAttributes {
