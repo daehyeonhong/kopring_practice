@@ -1,4 +1,4 @@
-package com.practice.kopring.config.security.handler
+package com.practice.kopring.oauth.handler
 
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.user.application.CustomOAuth2UserService
