@@ -54,7 +54,7 @@ class JwtTokenProvider(
         return UsernamePasswordAuthenticationToken(
             this.getAccountName(token),
             null,
-            getAuthorities(token)
+            this.getAuthorities(token)
         )
     }
 

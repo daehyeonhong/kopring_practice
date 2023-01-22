@@ -11,14 +11,14 @@ class UserRedisCacheService(
 ) {
     fun getWithToken(token: String?): String? = redisTemplate.opsForValue()[token!!]
 
-    fun getWithUserId(userId: String): String? = redisTemplate.opsForValue()[UserRedisKey.USER_KEY.value + ":" + userId]
+    fun getWithUserId(userId: String): String? = redisTemplate.opsForValue()["${UserRedisKey.USER_KEY.value}:${userId}"]
 
     fun update(key: String, value: String?, expiredTime: Long) {
-        redisTemplate.opsForValue()[UserRedisKey.USER_KEY.value + ":" + key, value!!, expiredTime] =
+        redisTemplate.opsForValue()["${UserRedisKey.USER_KEY.value}:${key}", value!!, expiredTime] =
             TimeUnit.MILLISECONDS
     }
 
     fun delete(userId: Long) {
-        redisTemplate.delete(UserRedisKey.USER_KEY.value + ":" + userId)
+        redisTemplate.delete("${UserRedisKey.USER_KEY.value}:${userId}")
     }
 }

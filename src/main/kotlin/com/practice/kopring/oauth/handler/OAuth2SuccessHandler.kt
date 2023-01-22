@@ -38,7 +38,7 @@ class OAuth2SuccessHandler(
 
         val id: String = user.id.toString()
         val accessToken: String = this.jwtTokenProvider.createAccessToken(id, Role.USER)
-        val refreshToken: String = jwtTokenProvider.createRefreshToken(id);
+        val refreshToken: String = this.jwtTokenProvider.createRefreshToken(id);
 
         this.userRedisCacheService.update(
             id,

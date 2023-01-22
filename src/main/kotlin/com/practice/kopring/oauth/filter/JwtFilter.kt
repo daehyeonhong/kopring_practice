@@ -1,6 +1,7 @@
 package com.practice.kopring.oauth.filter
 
 import com.practice.kopring.auth.application.JwtTokenProvider
+import com.practice.kopring.user.application.UserRedisCacheService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -8,7 +9,10 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.web.filter.OncePerRequestFilter
 
-class JwtFilter(private val jwtTokenProvider: JwtTokenProvider) : OncePerRequestFilter() {
+class JwtFilter(
+    private val jwtTokenProvider: JwtTokenProvider,
+    private val userRedisCacheService: UserRedisCacheService
+) : OncePerRequestFilter() {
     companion object {
         private const val AUTHORIZATION_HEADER: String = "Authorization"
         private const val BEARER_PREFIX: String = "Bearer "
@@ -21,8 +25,11 @@ class JwtFilter(private val jwtTokenProvider: JwtTokenProvider) : OncePerRequest
     ) {
         val token: String? = this.resolveToken(request)
         if (!token.isNullOrBlank() && this.jwtTokenProvider.validate(token)) {
-            val authentication: Authentication = this.jwtTokenProvider.getAuthentication(token)
-            SecurityContextHolder.getContext().authentication = authentication
+            val isLogout: String? = this.userRedisCacheService.getWithToken(token)
+            if (isLogout.isNullOrEmpty()) {
+                val authentication: Authentication = this.jwtTokenProvider.getAuthentication(token)
+                SecurityContextHolder.getContext().authentication = authentication
+            }
         }
         filterChain.doFilter(request, response)
     }

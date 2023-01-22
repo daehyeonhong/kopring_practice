@@ -4,6 +4,8 @@ import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.oauth.filter.JwtFilter
 import com.practice.kopring.oauth.handler.OAuth2SuccessHandler
 import com.practice.kopring.user.application.CustomOAuth2UserService
+import com.practice.kopring.user.application.UserRedisCacheService
+import com.practice.kopring.user.domain.enumerate.Role
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.http.HttpMethod
@@ -16,9 +18,10 @@ import org.springframework.web.cors.CorsUtils
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig(
+class SecurityConfig constructor(
     private val customOAuth2UserService: CustomOAuth2UserService,
     private val oAuth2SuccessHandler: OAuth2SuccessHandler,
+    private val userRedisCacheService: UserRedisCacheService,
     private val jwtTokenProvider: JwtTokenProvider
 ) {
 
@@ -37,9 +40,12 @@ class SecurityConfig(
                 it.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 it.requestMatchers("/auth/login").permitAll()
                 it.requestMatchers(HttpMethod.GET, "/users").permitAll()
-                it.anyRequest().authenticated()
+                it.anyRequest().hasRole(Role.USER.key)
             }
-            .addFilterBefore(JwtFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(
+                JwtFilter(this.jwtTokenProvider, this.userRedisCacheService),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
             .build()
     }
 }
