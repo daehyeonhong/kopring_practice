@@ -4,5 +4,5 @@ import java.util.UUID
 
 data class AuthInfo(
     val id: UUID,
-    val roles: MutableList<Any>?
+    val roles: Set<Any>?
 )

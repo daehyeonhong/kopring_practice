@@ -18,14 +18,15 @@ class JwtTokenProvider(
     @Value("\${jwt.secret}") private val secretKey: String
 ) {
     companion object {
-        private const val ACCESS_TOKEN_EXPIRE_TIME = 60 * 60 * 1_000L * 24 * 60
-        private const val REFRESH_TOKEN_EXPIRE_TIME = 60 * 60 * 1_000L * 24 * 60
+        private const val ACCESS_TOKEN_EXPIRE_TIME = 1_000L * 60
+        private const val REFRESH_TOKEN_EXPIRE_TIME = 1_000L * 60
     }
 
     fun createAccessToken(id: String, role: Role): String {
         return JWT.create()
             .withSubject(id)
             .withClaim("role", role.key)
+            .withIssuedAt(Date(System.currentTimeMillis()))
             .withExpiresAt(Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRE_TIME))
             .sign(Algorithm.HMAC512(this.secretKey))
     }
@@ -33,6 +34,7 @@ class JwtTokenProvider(
     fun createRefreshToken(id: String): String {
         return JWT.create()
             .withSubject(id)
+            .withIssuedAt(Date(System.currentTimeMillis()))
             .withExpiresAt(Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRE_TIME))
             .sign(Algorithm.HMAC512(this.secretKey))
     }
@@ -41,14 +43,10 @@ class JwtTokenProvider(
         return this.decodedJWT(token)?.expiresAt?.after(Date()) ?: false
     }
 
-    private fun decodedJWT(token: String): DecodedJWT? {
-        return JWT.require(Algorithm.HMAC512(this.secretKey)).build()
-            .verify(token)
-    }
+    private fun decodedJWT(token: String): DecodedJWT? = JWT.require(Algorithm.HMAC512(this.secretKey)).build()
+        .verify(token)
 
-    fun getAccountName(token: String): String? {
-        return this.decodedJWT(token)?.subject
-    }
+    fun getAccountName(token: String): String? = this.decodedJWT(token)?.subject
 
     fun getAuthentication(token: String): Authentication {
         return UsernamePasswordAuthenticationToken(

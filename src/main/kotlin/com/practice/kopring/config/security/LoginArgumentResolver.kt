@@ -5,6 +5,7 @@ import com.practice.kopring.oauth.dto.AuthUser
 import com.practice.kopring.user.domain.enumerate.Role
 import java.util.Objects
 import java.util.UUID
+import java.util.stream.Collectors
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -41,9 +42,9 @@ class LoginArgumentResolver : HandlerMethodArgumentResolver {
         )
     }
 
-    private fun rolesFromAuthorities(authorities: Collection<GrantedAuthority?>): MutableList<Any>? {
+    private fun rolesFromAuthorities(authorities: Collection<GrantedAuthority?>): Set<Any>? {
         return authorities.stream()
             .map<Any> { authority: GrantedAuthority? -> Role.of(authority!!.authority) }
-            .toList()
+            .collect(Collectors.toSet())
     }
 }
