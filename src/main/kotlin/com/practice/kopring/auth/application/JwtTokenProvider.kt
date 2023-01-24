@@ -43,10 +43,10 @@ class JwtTokenProvider(
         return this.decodedJWT(token)?.expiresAt?.after(Date()) ?: false
     }
 
-    private fun decodedJWT(token: String): DecodedJWT? = JWT.require(Algorithm.HMAC512(this.secretKey)).build()
+    private fun decodedJWT(token: String?): DecodedJWT? = JWT.require(Algorithm.HMAC512(this.secretKey)).build()
         .verify(token)
 
-    fun getAccountName(token: String): String? = this.decodedJWT(token)?.subject
+    fun getAccountName(token: String?): String? = this.decodedJWT(token)?.subject
 
     fun getAuthentication(token: String): Authentication {
         return UsernamePasswordAuthenticationToken(

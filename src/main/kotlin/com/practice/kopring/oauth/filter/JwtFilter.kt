@@ -26,7 +26,7 @@ class JwtFilter(
         val token: String? = this.resolveToken(request)
         if (!token.isNullOrBlank() && this.jwtTokenProvider.validate(token)) {
             val isLogout: String? = this.userRedisCacheService.getWithToken(token)
-            if (isLogout.isNullOrEmpty()) {
+            if (isLogout.isNullOrBlank()) {
                 val authentication: Authentication = this.jwtTokenProvider.getAuthentication(token)
                 SecurityContextHolder.getContext().authentication = authentication
             }
