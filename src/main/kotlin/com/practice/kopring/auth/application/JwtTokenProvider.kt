@@ -39,7 +39,7 @@ class JwtTokenProvider(
             .sign(Algorithm.HMAC512(this.secretKey))
     }
 
-    fun validate(token: String): Boolean {
+    fun validate(token: String?): Boolean {
         return this.decodedJWT(token)?.expiresAt?.after(Date()) ?: false
     }
 
