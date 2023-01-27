@@ -1,4 +1,4 @@
-package com.practice.kopring.common.domain.dto
+package com.practice.kopring.common.dto
 
 import java.io.Serializable
 
