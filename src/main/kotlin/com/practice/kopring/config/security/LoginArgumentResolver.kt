@@ -31,7 +31,7 @@ class LoginArgumentResolver : HandlerMethodArgumentResolver {
         binderFactory: WebDataBinderFactory?
     ): Any {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        if (Objects.equals(authentication.principal, "anonymousUser")) {
+        if (authentication.principal == "anonymousUser") {
             throw RuntimeException("")
         }
 

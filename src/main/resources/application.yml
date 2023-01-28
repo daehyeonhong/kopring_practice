@@ -6,6 +6,7 @@ spring:
     open-in-view: false
     hibernate:
       ddl-auto: create-drop
+    show-sql: true
   datasource:
     url: jdbc:mysql://localhost:3306/springbatch?useUnicode=true&characterEncoding=utf8
     username: root
