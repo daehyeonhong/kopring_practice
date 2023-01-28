@@ -1,5 +1,6 @@
 package com.practice.kopring.common.domain.presentation
 
+import com.practice.kopring.common.presentation.IndexController
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
