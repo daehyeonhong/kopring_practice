@@ -5,7 +5,6 @@ import com.practice.kopring.user.application.CustomOAuth2UserService
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.application.UserService
 import com.practice.kopring.user.domain.entity.UserEntity
-import com.practice.kopring.user.domain.enumerate.Role
 import com.practice.kopring.user.domain.enumerate.Status
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -37,7 +36,7 @@ class OAuth2SuccessHandler(
         val user: UserEntity = this.userService.findByEmail(email)
 
         val id: String = user.id.toString()
-        val accessToken: String = this.jwtTokenProvider.createAccessToken(id, Role.USER)
+        val accessToken: String = this.jwtTokenProvider.createAccessToken(id, user.role)
         val refreshToken: String = this.jwtTokenProvider.createRefreshToken(id);
 
         this.userRedisCacheService.update(

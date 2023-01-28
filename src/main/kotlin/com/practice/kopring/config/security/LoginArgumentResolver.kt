@@ -1,10 +1,9 @@
 package com.practice.kopring.config.security
 
-import com.practice.kopring.oauth.config.AuthInfo
+import com.practice.kopring.oauth.dto.AuthInfo
 import com.practice.kopring.oauth.dto.AuthUser
 import com.practice.kopring.user.domain.enumerate.Role
-import java.util.Objects
-import java.util.UUID
+import java.util.*
 import java.util.stream.Collectors
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.Authentication
@@ -44,7 +43,7 @@ class LoginArgumentResolver : HandlerMethodArgumentResolver {
 
     private fun rolesFromAuthorities(authorities: Collection<GrantedAuthority?>): Set<Any>? {
         return authorities.stream()
-            .map<Any> { authority: GrantedAuthority? -> Role.of(authority!!.authority) }
+            .map<Any> { authority: GrantedAuthority? -> Role.of(authority?.authority) }
             .collect(Collectors.toSet())
     }
 }

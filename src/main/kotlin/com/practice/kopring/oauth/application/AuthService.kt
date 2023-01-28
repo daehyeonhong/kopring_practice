@@ -1,18 +1,19 @@
 package com.practice.kopring.oauth.application
 
-import com.auth0.jwt.exceptions.TokenExpiredException
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.auth.domain.dto.JwtDto
+import com.practice.kopring.exception.NotExistsUserException
+import com.practice.kopring.exception.TokenExpiredException
+import com.practice.kopring.exception.TokenInvalidException
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.domain.entity.UserEntity
-import com.practice.kopring.user.domain.enumerate.Role
 import com.practice.kopring.user.domain.enumerate.UserRedisKey
 import com.practice.kopring.user.infrastructure.UserRepository
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.UUID
+import java.util.*
 import org.springframework.data.repository.findByIdOrNull
+import org.springframework.stereotype.Service
 
+@Service
 class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userRepository: UserRepository,
@@ -20,20 +21,17 @@ class AuthService(
 ) {
     fun refresh(refreshToken: String?): JwtDto {
         val userId: String? = this.jwtTokenProvider.getAccountName(refreshToken)
-        if (userId.isNullOrBlank()) throw java.lang.IllegalArgumentException()
-        val user: UserEntity = this.userRepository.findByIdOrNull(UUID.fromString(userId))
-            ?: throw IllegalArgumentException()
-        val redisRT: String? = this.userRedisCacheService.getWithUserId(userId)
+        if (userId.isNullOrBlank()) throw NotExistsUserException()
 
-        if (refreshToken.isNullOrBlank()) {
-            throw TokenExpiredException("", LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
-        }
-        if (!this.jwtTokenProvider.validate(redisRT)) {
-            throw TokenExpiredException("", LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
-        } else if (!redisRT.equals(refreshToken)) {
-            throw TokenInvalidException()
-        }
-        val newAccessToken: String = this.jwtTokenProvider.createAccessToken(user.id.toString(), Role.USER)
+        val user: UserEntity = this.userRepository.findByIdOrNull(UUID.fromString(userId))
+            ?: throw NotExistsUserException()
+        val refreshTokenFromRedis: String? = this.userRedisCacheService.getWithUserId(userId)
+
+        if (refreshToken.isNullOrBlank()) throw TokenExpiredException()
+        if (!this.jwtTokenProvider.validate(refreshTokenFromRedis)) throw TokenExpiredException()
+        else if (!refreshTokenFromRedis.equals(refreshToken)) throw TokenInvalidException()
+
+        val newAccessToken: String = this.jwtTokenProvider.createAccessToken(user.id.toString(), user.role)
         val newRefreshToken: String = this.jwtTokenProvider.createRefreshToken(user.id.toString())
 
         this.userRedisCacheService.update(
@@ -41,6 +39,7 @@ class AuthService(
             newRefreshToken,
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
+
         return JwtDto(
             grantType = "Bearer",
             accessToken = newAccessToken,

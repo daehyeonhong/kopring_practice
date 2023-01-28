@@ -1,6 +1,6 @@
-package com.practice.kopring.oauth.config
+package com.practice.kopring.oauth.dto
 
-import java.util.UUID
+import java.util.*
 
 data class AuthInfo(
     val id: UUID,

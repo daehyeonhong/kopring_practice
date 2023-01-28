@@ -40,7 +40,7 @@ class SecurityConfig constructor(
                 it.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 it.requestMatchers("/auth/login").permitAll()
                 it.requestMatchers(HttpMethod.GET, "/users").permitAll()
-                it.anyRequest().hasRole(Role.USER.key)
+                it.anyRequest().hasRole(Role.USER.name)
             }
             .addFilterBefore(
                 JwtFilter(this.jwtTokenProvider, this.userRedisCacheService),
