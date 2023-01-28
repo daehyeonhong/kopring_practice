@@ -27,4 +27,11 @@ class RoleTest {
         val input: String = "ROLE_BOSS"
         Assertions.assertThrows(InvalidUserRoleException::class.java) { Role.of(input) }
     }
+
+    @Test
+    @DisplayName(value = "Role_Title_Tests")
+    fun roleTitleTests(): Unit {
+        assertEquals("손님", Role.GUEST.title)
+        assertEquals("일반 사용자", Role.USER.title)
+    }
 }
