@@ -5,8 +5,23 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 
 class RoleTest {
+    @ParameterizedTest
+    @CsvSource(
+        value = [
+            "ROLE_GUEST, 손님, GUEST",
+            "ROLE_USER, 일반 사용자, USER",
+        ]
+    )
+    fun roleTest(input: String, title: String, role: Role): Unit {
+        val actual: Role = Role.of(input)
+        assertEquals(role, actual)
+        assertEquals(title, actual.title)
+    }
+
     @Test
     @DisplayName(value = "assertRole")
     fun assertRole_User(): Unit {
