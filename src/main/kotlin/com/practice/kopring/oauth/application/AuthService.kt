@@ -7,7 +7,6 @@ import com.practice.kopring.exception.TokenExpiredException
 import com.practice.kopring.exception.TokenInvalidException
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.domain.entity.UserEntity
-import com.practice.kopring.user.domain.enumerate.UserRedisKey
 import com.practice.kopring.user.infrastructure.UserRepository
 import java.util.*
 import org.springframework.data.repository.findByIdOrNull
@@ -35,7 +34,7 @@ class AuthService(
         val newRefreshToken: String = this.jwtTokenProvider.createRefreshToken(user.id.toString())
 
         this.userRedisCacheService.update(
-            UserRedisKey.USER_KEY.value + user.id,
+            user.id.toString(),
             newRefreshToken,
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
