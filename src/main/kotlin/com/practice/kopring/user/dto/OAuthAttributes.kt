@@ -1,4 +1,4 @@
-package com.practice.kopring.user.domain.dto
+package com.practice.kopring.user.dto
 
 import com.practice.kopring.user.domain.enumerate.Provider
 

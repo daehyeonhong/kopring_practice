@@ -1,4 +1,4 @@
-package com.practice.kopring.common.domain.presentation
+package com.practice.kopring.common.presentation
 
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

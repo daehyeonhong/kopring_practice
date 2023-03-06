@@ -7,6 +7,7 @@ import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.EnumSource
 
 class RoleTest {
     @ParameterizedTest
@@ -20,6 +21,17 @@ class RoleTest {
         val actual: Role = Role.of(input)
         assertEquals(role, actual)
         assertEquals(title, actual.title)
+    }
+
+    @ParameterizedTest
+    @EnumSource(
+        value = Role::class,
+        names = ["GUEST", "USER"]
+    )
+    fun roleTest1(role: Role): Unit {
+        val actual: Role = Role.of(role.key)
+        assertEquals(role, actual)
+        assertEquals(role.title, actual.title)
     }
 
     @Test
