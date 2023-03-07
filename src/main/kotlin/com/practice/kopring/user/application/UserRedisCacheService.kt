@@ -27,6 +27,11 @@ class UserRedisCacheService(
             TimeUnit.MILLISECONDS
     }
 
+    fun update(refreshToken: RefreshToken, expiredTime: Long) {
+        val valueOperations: ValueOperations<String, String> = this.redisTemplate.opsForValue()
+        valueOperations.
+    }
+
     fun delete(userId: Long) {
         redisTemplate.delete("${UserRedisKey.USER_KEY.value}:${userId}")
     }
