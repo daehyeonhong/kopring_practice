@@ -1,6 +1,7 @@
 package com.practice.kopring.oauth.application
 
 import com.practice.kopring.auth.application.JwtTokenProvider
+import com.practice.kopring.auth.domain.RefreshToken
 import com.practice.kopring.auth.domain.dto.JwtDto
 import com.practice.kopring.exception.NotExistsUserException
 import com.practice.kopring.exception.TokenExpiredException
@@ -33,9 +34,8 @@ class AuthService(
         val newAccessToken: String = this.jwtTokenProvider.createAccessToken(user.id.toString(), user.role)
         val newRefreshToken: String = this.jwtTokenProvider.createRefreshToken(user.id.toString())
 
-        this.userRedisCacheService.update(
-            user.id.toString(),
-            newRefreshToken,
+        this.userRedisCacheService.save(
+            RefreshToken(newRefreshToken, user.id.toString()),
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
 

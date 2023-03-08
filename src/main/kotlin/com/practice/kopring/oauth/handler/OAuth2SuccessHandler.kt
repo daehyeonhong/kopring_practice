@@ -1,6 +1,7 @@
 package com.practice.kopring.oauth.handler
 
 import com.practice.kopring.auth.application.JwtTokenProvider
+import com.practice.kopring.auth.domain.RefreshToken
 import com.practice.kopring.user.application.CustomOAuth2UserService
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.application.UserService
@@ -39,9 +40,8 @@ class OAuth2SuccessHandler(
         val accessToken: String = this.jwtTokenProvider.createAccessToken(id, user.role)
         val refreshToken: String = this.jwtTokenProvider.createRefreshToken(id);
 
-        this.userRedisCacheService.update(
-            id,
-            refreshToken,
+        this.userRedisCacheService.save(
+            RefreshToken(refreshToken, id),
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
 
