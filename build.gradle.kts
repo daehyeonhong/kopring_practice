@@ -65,6 +65,7 @@ dependencies {
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-log4j2")
+    testImplementation("io.rest-assured:rest-assured:5.3.0")
 }
 
 tasks.withType<KotlinCompile> {

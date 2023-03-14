@@ -1,38 +1,27 @@
 package com.practice.kopring.common.domain.presentation
 
-import com.practice.kopring.common.presentation.IndexController
-import org.junit.jupiter.api.DisplayName
+import com.practice.kopring.ApiTest
+import com.practice.kopring.auth.application.JwtTokenProvider
+import io.restassured.RestAssured.given
+import io.restassured.http.ContentType
+import org.hamcrest.Matchers.containsString
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
-import org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.oauth2Login
-import org.springframework.test.web.servlet.MockMvc
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 
-@WebMvcTest(value = [IndexController::class])
-class IndexControllerTests(@Autowired private val mvc: MockMvc) {
+class IndexControllerTests(
+    @Autowired
+    private val jwtTokenProvider: JwtTokenProvider
+) : ApiTest() {
 
     @Test
-    @DisplayName(value = "권한")
-    fun index() {
-        mvc.perform(
-            get("/").with(
-                oauth2Login()
-                    .attributes {
-                        it["username"] = "hi"
-                        it["name"] = "gamja"
-                        it["email"] = "test@gmail.com"
-                        it["picture"] = ""
-                    }
-
-            )
-        )
-            .andExpect {
-                status().isOk
-                content().string("ok")
-                println(content())
-            }
+    fun `OAuth2를 이용한 회원가입 테스트`() {
+        given()
+            .`when`()
+            .get("/")
+            .then()
+            .statusCode(302)
+            .contentType(ContentType.HTML)
+            .header("Location", containsString("https://accounts.google.com/o/oauth2/v2"))
     }
+
 }
