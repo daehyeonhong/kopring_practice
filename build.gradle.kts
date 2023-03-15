@@ -1,7 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.0.1"
+    id("org.springframework.boot") version "3.0.4"
     id("io.spring.dependency-management") version "1.1.0"
     id("org.asciidoctor.convert") version "1.5.8"
     kotlin("jvm") version "1.8.0"
@@ -52,7 +52,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     //JWT Dependency
-    implementation("com.auth0:java-jwt:4.2.1")
+    implementation("com.auth0:java-jwt:4.3.0")
 
     implementation("com.github.f4b6a3:ulid-creator:5.1.0")
 
