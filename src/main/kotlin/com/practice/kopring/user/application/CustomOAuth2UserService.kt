@@ -27,34 +27,33 @@ class CustomOAuth2UserService(
         val registrationId: String = userRequest.clientRegistration.registrationId
         val userNameAttributeName: String =
             userRequest.clientRegistration.providerDetails.userInfoEndpoint.userNameAttributeName
-
         val attributes: OAuthAttributes = OAuthAttributes.of(
             registrationId,
             userNameAttributeName,
             oAuth2User.attributes
         )
-        val hashMap: MutableMap<String, Any> = HashMap(attributes.attributes)
-        hashMap["provider"] = attributes.provider
         return DefaultOAuth2User(
             setOf(SimpleGrantedAuthority(Role.USER.key)),
-            hashMap,
+            attributes.attributes,
             attributes.nameAttributeKey
         )
     }
 
-    fun saveOrUpdate(oauth2User: OAuth2User): UserEntity {
+    fun saveOrUpdate(oauth2User: OAuth2User, provider: Provider): UserEntity {
         val data: Map<String, Any> = oauth2User.attributes
         val email: String = data["email"] as String
 
-        val userEntity: UserEntity = this.userRepository.findByEmail(email)
+        val userEntity: UserEntity = userRepository.findByEmail(email)
             ?.apply { this.loginUpdate(name, picture) }
-            ?: UserEntity(
-                name = data["name"] as String,
-                email = email,
-                picture = data["picture"] as String,
-                role = Role.USER,
-                provider = Provider.of(data["provider"] as String)
-            )
+            ?: {
+                UserEntity(
+                    name = data["name"] as String,
+                    email = email,
+                    picture = data["picture"] as String,
+                    role = Role.USER,
+                    provider = provider
+                )
+            }
         return this.userRepository.save(userEntity)
     }
 }
