@@ -8,7 +8,8 @@ data class OAuthAttributes(
     val nameAttributeKey: String,
     val email: String,
     val name: String,
-    val picture: String
+    val picture: String,
+    val provider: String
 ) {
     companion object {
         fun of(
@@ -25,7 +26,8 @@ data class OAuthAttributes(
                 name = attributes["name"] as String,
                 email = attributes["email"] as String,
                 picture = attributes["picture"] as String,
-                attributes = attributes
+                attributes = attributes,
+                provider = Provider.FACEBOOK.name
             )
         }
 
@@ -35,7 +37,8 @@ data class OAuthAttributes(
                 name = attributes["name"] as String,
                 email = attributes["email"] as String,
                 picture = attributes["picture"] as String,
-                attributes = attributes
+                attributes = attributes,
+                provider = Provider.GOOGLE.name
             )
         }
     }
@@ -46,7 +49,8 @@ data class OAuthAttributes(
             "key" to nameAttributeKey,
             "name" to name,
             "email" to email,
-            "picture" to picture
+            "picture" to picture,
+            "provider" to provider
         )
     }
 }

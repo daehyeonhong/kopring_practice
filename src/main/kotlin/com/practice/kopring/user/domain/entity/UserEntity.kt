@@ -1,6 +1,7 @@
 package com.practice.kopring.user.domain.entity
 
 import com.practice.kopring.common.domain.entity.PrimaryKeyEntity
+import com.practice.kopring.user.domain.enumerate.Provider
 import com.practice.kopring.user.domain.enumerate.Role
 import jakarta.persistence.*
 
@@ -13,7 +14,11 @@ class UserEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var role: Role
+    var role: Role,
+
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    var provider: Provider
 ) : PrimaryKeyEntity() {
 
     @Column(nullable = false)

@@ -29,6 +29,7 @@ class OAuth2SuccessHandler(
         authentication: Authentication?
     ) {
         val oAuth2User: OAuth2User = authentication?.principal as OAuth2User
+
         val email: String = oAuth2User.attributes["email"] as String
         val status: Status = Status.of(this.userService.checkExistEmail(email))
 

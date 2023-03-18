@@ -1,6 +1,7 @@
 package com.practice.kopring.user.application
 
 import com.practice.kopring.user.domain.entity.UserEntity
+import com.practice.kopring.user.domain.enumerate.Provider
 import com.practice.kopring.user.domain.enumerate.Role
 import com.practice.kopring.user.dto.OAuthAttributes
 import com.practice.kopring.user.infrastructure.UserRepository
@@ -32,10 +33,11 @@ class CustomOAuth2UserService(
             userNameAttributeName,
             oAuth2User.attributes
         )
-
+        val hashMap: MutableMap<String, Any> = HashMap(attributes.attributes)
+        hashMap["provider"] = attributes.provider
         return DefaultOAuth2User(
             setOf(SimpleGrantedAuthority(Role.USER.key)),
-            attributes.attributes,
+            hashMap,
             attributes.nameAttributeKey
         )
     }
@@ -50,7 +52,8 @@ class CustomOAuth2UserService(
                 name = data["name"] as String,
                 email = email,
                 picture = data["picture"] as String,
-                role = Role.USER
+                role = Role.USER,
+                provider = Provider.of(data["provider"] as String)
             )
         return this.userRepository.save(userEntity)
     }
