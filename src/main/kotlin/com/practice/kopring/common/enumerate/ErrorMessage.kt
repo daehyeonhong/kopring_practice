@@ -5,7 +5,6 @@ import org.springframework.http.HttpStatus.BAD_REQUEST
 import org.springframework.http.HttpStatus.FORBIDDEN
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.HttpStatus.UNAUTHORIZED
-
 enum class ErrorMessage(
     val status: HttpStatus, val description: String
 ) {
@@ -18,5 +17,6 @@ enum class ErrorMessage(
     NOT_VALIDATE_TOKEN(status = UNAUTHORIZED, description = "유효하지 않은 토큰입니다."),
     NOT_EXISTS_OAUTH_INFO(status = NOT_FOUND, description = "존재하지 않는 OAUTH 계정입니다."),
 
+    NOT_VALID_PROVIDER_ERROR(status = BAD_REQUEST, description = "해당 E-Mail 계정은 다른 서비스를 통해 가입한 상태입니다."),
     MAPPER_JSON_ERROR(status = BAD_REQUEST, description = "mapper error가 발생했습니다.");
 }

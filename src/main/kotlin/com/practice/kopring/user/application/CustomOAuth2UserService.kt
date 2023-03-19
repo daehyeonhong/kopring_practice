@@ -1,5 +1,6 @@
 package com.practice.kopring.user.application
 
+import com.practice.kopring.exception.InvalidUserProviderException
 import com.practice.kopring.user.domain.entity.UserEntity
 import com.practice.kopring.user.domain.enumerate.Provider
 import com.practice.kopring.user.domain.enumerate.Role
@@ -43,17 +44,23 @@ class CustomOAuth2UserService(
         val data: Map<String, Any> = oauth2User.attributes
         val email: String = data["email"] as String
 
-        val userEntity: UserEntity = userRepository.findByEmail(email)
-            ?.apply { this.loginUpdate(name, picture) }
-            ?: {
-                UserEntity(
-                    name = data["name"] as String,
-                    email = email,
-                    picture = data["picture"] as String,
-                    role = Role.USER,
-                    provider = provider
-                )
+        val findByEmail = userRepository.findByEmail(email)
+        val name = data["name"] as String
+        val picture = data["picture"] as String
+        if (findByEmail == null) return this.userRepository.save(
+            UserEntity(
+                name = name,
+                email = email,
+                picture = picture,
+                role = Role.USER,
+                provider = provider
+            )
+        ) else {
+            if (findByEmail.provider === provider) {
+                findByEmail.loginUpdate(name, picture)
+                return this.userRepository.save(findByEmail)
             }
-        return this.userRepository.save(userEntity)
+            throw InvalidUserProviderException()
+        }
     }
 }
