@@ -14,7 +14,3 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
   profiles:
     include: oauth
-jwt:
-  secret: asd
-url:
-  redirect: /auth/login/s
