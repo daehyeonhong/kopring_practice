@@ -1,5 +1,6 @@
 package com.practice.kopring.user.dto
 
+import com.practice.kopring.exception.InvalidProviderException
 import com.practice.kopring.user.domain.enumerate.Provider
 
 
@@ -15,21 +16,27 @@ data class OAuthAttributes(
             provider: String, userNameAttributeName: String, attributes: Map<String, Any>
         ): OAuthAttributes = when (Provider.of(provider)) {
             Provider.GOOGLE -> ofGoogle(userNameAttributeName, attributes)
+            Provider.GITHUB -> ofGithub(userNameAttributeName, attributes)
             Provider.FACEBOOK -> ofFacebook(userNameAttributeName, attributes)
-            Provider.NONE -> throw IllegalArgumentException(provider)
+            Provider.NONE -> throw InvalidProviderException(provider)
         }
 
         private fun ofFacebook(attributeKey: String, attributes: Map<String, Any>): OAuthAttributes {
-            return OAuthAttributes(
-                nameAttributeKey = attributeKey,
-                name = attributes["name"] as String,
-                email = attributes["email"] as String,
-                picture = attributes["picture"] as String,
-                attributes = attributes
-            )
+            return this.createDefaultOAuthAttributes(attributeKey, attributes)
         }
 
         private fun ofGoogle(attributeKey: String, attributes: Map<String, Any>): OAuthAttributes {
+            return this.createDefaultOAuthAttributes(attributeKey, attributes)
+        }
+
+        private fun ofGithub(attributeKey: String, attributes: Map<String, Any>): OAuthAttributes {
+            return this.createDefaultOAuthAttributes(attributeKey, attributes)
+        }
+
+        private fun createDefaultOAuthAttributes(
+            attributeKey: String,
+            attributes: Map<String, Any>
+        ): OAuthAttributes {
             return OAuthAttributes(
                 nameAttributeKey = attributeKey,
                 name = attributes["name"] as String,

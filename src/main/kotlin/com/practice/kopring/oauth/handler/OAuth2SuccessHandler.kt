@@ -8,6 +8,7 @@ import com.practice.kopring.user.application.UserService
 import com.practice.kopring.user.domain.entity.UserEntity
 import com.practice.kopring.user.domain.enumerate.Provider
 import com.practice.kopring.user.domain.enumerate.Status
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -47,7 +48,13 @@ class OAuth2SuccessHandler(
             RefreshToken(refreshToken, id),
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
-
+        val refreshTokenCookie: Cookie = Cookie("refresh-token", refreshToken)
+        refreshTokenCookie.let {
+            it.secure = true
+            it.isHttpOnly = true
+            it.path = "/"
+        }
+        response?.addCookie(refreshTokenCookie)
         val redirectUrl: String = "${this.redirectUrl}?status=${status}?access=${accessToken}?refresh=${refreshToken}"
         response?.sendRedirect(redirectUrl)
     }

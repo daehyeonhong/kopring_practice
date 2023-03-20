@@ -4,6 +4,7 @@ enum class Provider(
 ) {
     GOOGLE,
     FACEBOOK,
+    GITHUB,
     NONE;
 
     companion object {
