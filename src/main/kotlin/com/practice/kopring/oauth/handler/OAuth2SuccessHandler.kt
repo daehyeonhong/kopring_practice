@@ -2,13 +2,12 @@ package com.practice.kopring.oauth.handler
 
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.auth.domain.RefreshToken
+import com.practice.kopring.common.util.CookieUtils
 import com.practice.kopring.user.application.CustomOAuth2UserService
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.application.UserService
 import com.practice.kopring.user.domain.entity.UserEntity
 import com.practice.kopring.user.domain.enumerate.Provider
-import com.practice.kopring.user.domain.enumerate.Status
-import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -26,6 +25,11 @@ class OAuth2SuccessHandler(
     private val userRedisCacheService: UserRedisCacheService,
     private val jwtTokenProvider: JwtTokenProvider
 ) : SimpleUrlAuthenticationSuccessHandler() {
+    companion object {
+        private const val ACCESS_TOKEN: String = "ACCESS-TOKEN"
+        private const val REFRESH_TOKEN: String = "REFRESH-TOKEN"
+    }
+
     override fun onAuthenticationSuccess(
         request: HttpServletRequest?,
         response: HttpServletResponse?,
@@ -34,7 +38,6 @@ class OAuth2SuccessHandler(
         val oAuth2User: OAuth2User = authentication?.principal as OAuth2User
 
         val email: String = oAuth2User.attributes["email"] as String
-        val status: Status = Status.of(this.userService.checkExistEmail(email))
         val provider: String = (authentication as OAuth2AuthenticationToken).authorizedClientRegistrationId
         this.oAuth2UserService.saveOrUpdate(oAuth2User, Provider.of(provider))
 
@@ -48,14 +51,21 @@ class OAuth2SuccessHandler(
             RefreshToken(refreshToken, id),
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
-        val refreshTokenCookie: Cookie = Cookie("refresh-token", refreshToken)
-        refreshTokenCookie.let {
-            it.secure = true
-            it.isHttpOnly = true
-            it.path = "/"
-        }
-        response?.addCookie(refreshTokenCookie)
-        val redirectUrl: String = "${this.redirectUrl}?status=${status}?access=${accessToken}?refresh=${refreshToken}"
+
+        CookieUtils.addCookie(
+            response,
+            ACCESS_TOKEN,
+            accessToken,
+            this.jwtTokenProvider.getExpiration(accessToken).toInt()
+        )
+
+        CookieUtils.addCookie(
+            response,
+            REFRESH_TOKEN,
+            refreshToken,
+            this.jwtTokenProvider.getExpiration(refreshToken).toInt()
+        )
+
         response?.sendRedirect(redirectUrl)
     }
 }
