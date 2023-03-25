@@ -1,19 +1,15 @@
 package com.practice.kopring.common.domain.presentation
 
-import RestDocsTestBase
+import RestAssuredTestBase
 import io.restassured.RestAssured.given
 import org.junit.jupiter.api.Test
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentation
 
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-class IndexControllerTests(
+class IndexControllerRestAssuredTests(
     @LocalServerPort private val port: Int
-) : RestDocsTestBase(port) {
+) : RestAssuredTestBase(port) {
 
     @Test
     fun rootTest() {

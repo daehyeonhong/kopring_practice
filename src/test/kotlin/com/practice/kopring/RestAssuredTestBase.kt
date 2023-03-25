@@ -13,7 +13,7 @@ import org.springframework.restdocs.restassured.RestAssuredRestDocumentation.doc
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ExtendWith(RestDocumentationExtension::class)
-abstract class RestDocsTestBase(@LocalServerPort private val port: Int) {
+abstract class RestAssuredTestBase(@LocalServerPort private val port: Int) {
     protected lateinit var spec: RequestSpecification
 
     @BeforeEach
