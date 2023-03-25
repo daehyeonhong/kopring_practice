@@ -1,5 +1,6 @@
 package com.practice.kopring.config.security
 
+import com.practice.kopring.exception.oauth.NotExistsOauthInfoException
 import com.practice.kopring.oauth.dto.AuthInfo
 import com.practice.kopring.oauth.dto.AuthUser
 import com.practice.kopring.user.domain.enumerate.Role
@@ -32,7 +33,7 @@ class LoginArgumentResolver : HandlerMethodArgumentResolver {
     ): Any {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
         if (authentication.principal == "anonymousUser") {
-            throw RuntimeException("")
+            throw NotExistsOauthInfoException()
         }
 
         return AuthInfo(
