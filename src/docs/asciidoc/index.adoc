@@ -1,0 +1,25 @@
+= restDocs
+:toc: left
+:toclevels: 2
+:sectlinks:
+:docktype: book
+:source-highlighter: highlightjs
+:icons: font
+:source-language: java
+:highlightjs-theme: github
+:highlightjs-languages: java,xml,html,css,js,http
+:snippets: target/generated-snippets
+
+== 회원가입
+
+include::{snippets}/index-controller-tests/root-test/http-request.adoc[]
+include::{snippets}/index-controller-tests/root-test/http-response.adoc[]
+include::{snippets}/index-controller-tests/root-test/curl-request.adoc[]
+// include::{snippets}/index-controller-tests/root-test/response-fields.adoc[]
+
+== 회원가입
+
+include::{snippets}/index-controller-tests/root-test/http-request.adoc[]
+include::{snippets}/index-controller-tests/root-test/http-response.adoc[]
+include::{snippets}/index-controller-tests/root-test/curl-request.adoc[]
+// include::{snippets}/index-controller-tests/root-test/response-fields.adoc[]

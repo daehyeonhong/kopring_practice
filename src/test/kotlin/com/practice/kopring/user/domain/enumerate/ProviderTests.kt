@@ -8,7 +8,7 @@ class ProviderTests {
     @ParameterizedTest
     @CsvSource(
         value = [
-            "github, NONE",
+            "github, GITHUB",
             "google, GOOGLE",
             "FacEBook, FACEBOOK",
             "kakao, NONE"]

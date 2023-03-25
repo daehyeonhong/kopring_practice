@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "3.0.4"
     id("io.spring.dependency-management") version "1.1.0"
-    id("org.asciidoctor.convert") version "1.5.8"
+    id("org.asciidoctor.jvm.convert") version "3.3.2"
     kotlin("jvm") version "1.8.0"
     kotlin("plugin.spring") version "1.8.0"
     kotlin("plugin.jpa") version "1.8.0"
@@ -21,6 +21,7 @@ group = "com.practice"
 version = "0.0.1-SNAPSHOT"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
+val asciidoctorExt: Configuration by configurations.creating
 configurations {
     compileOnly {
         extendsFrom(configurations.annotationProcessor.get())
@@ -28,13 +29,41 @@ configurations {
     implementation {
         exclude("org.springframework.boot", "spring-boot-starter-logging")
     }
+    dependencies {
+        asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
+    }
+}
+
+val snippetsDir by extra { file("build/generated-snippets") }
+
+tasks {
+    test {
+        outputs.dir(snippetsDir)
+    }
+    asciidoctor {
+        baseDirFollowsSourceFile()
+        inputs.dir(snippetsDir)
+        dependsOn(test)
+        doFirst {
+            delete {
+                file("src/main/resources/static/docs")
+            }
+        }
+        doLast {
+            copy {
+                from("build/docs/asciidoc")
+                into("src/main/resources/static/docs")
+            }
+        }
+    }
+    build {
+        dependsOn(asciidoctor)
+    }
 }
 
 repositories {
     mavenCentral()
 }
-
-val snippetsDir by extra { file("build/generated-snippets") }
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
@@ -63,9 +92,8 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
-    testImplementation("org.springframework.security:spring-security-test")
-    testImplementation("org.springframework.boot:spring-boot-starter-log4j2")
-    testImplementation("io.rest-assured:rest-assured:5.3.0")
+    testImplementation("org.springframework.restdocs:spring-restdocs-restassured")
+    testImplementation("io.rest-assured:rest-assured")
 }
 
 tasks.withType<KotlinCompile> {
@@ -83,11 +111,6 @@ tasks.test {
     finalizedBy(tasks.jacocoTestReport)
 }
 
-tasks.asciidoctor {
-    inputs.dir(snippetsDir)
-    dependsOn(tasks.test)
-}
-
 tasks.jacocoTestReport {
     dependsOn(tasks.test)
     reports {
@@ -96,9 +119,6 @@ tasks.jacocoTestReport {
         html.outputLocation.set(layout.buildDirectory.dir("jacocoHtml"))
     }
     finalizedBy(tasks.jacocoTestCoverageVerification)
-}
-
-tasks.test {
 }
 
 tasks.jacocoTestCoverageVerification {
@@ -128,6 +148,7 @@ tasks.jacocoTestCoverageVerification {
         }
     }
 }
+
 val testCoverage by tasks.registering {
     group = "verification"
     description = "Runs the unit tests with coverage"
