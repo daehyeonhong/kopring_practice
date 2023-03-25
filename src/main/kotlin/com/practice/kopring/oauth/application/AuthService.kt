@@ -3,9 +3,9 @@ package com.practice.kopring.oauth.application
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.auth.domain.RefreshToken
 import com.practice.kopring.auth.domain.dto.JwtDto
-import com.practice.kopring.exception.NotExistsUserException
-import com.practice.kopring.exception.TokenExpiredException
-import com.practice.kopring.exception.TokenInvalidException
+import com.practice.kopring.exception.oauth.TokenExpiredException
+import com.practice.kopring.exception.oauth.TokenInvalidException
+import com.practice.kopring.exception.user.NotExistsUserException
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.domain.entity.UserEntity
 import com.practice.kopring.user.infrastructure.UserRepository

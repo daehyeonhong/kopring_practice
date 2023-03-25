@@ -1,6 +1,6 @@
 package com.practice.kopring.user.domain.enumerate
 
-import com.practice.kopring.exception.InvalidUserRoleException
+import com.practice.kopring.exception.user.InvalidUserRoleException
 
 enum class Role(
     val key: String,

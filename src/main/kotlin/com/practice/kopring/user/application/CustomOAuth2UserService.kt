@@ -1,6 +1,6 @@
 package com.practice.kopring.user.application
 
-import com.practice.kopring.exception.InvalidUserProviderException
+import com.practice.kopring.exception.oauth.InvalidUserProviderException
 import com.practice.kopring.user.domain.entity.UserEntity
 import com.practice.kopring.user.domain.enumerate.Provider
 import com.practice.kopring.user.domain.enumerate.Role

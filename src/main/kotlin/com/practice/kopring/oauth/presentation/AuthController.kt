@@ -4,5 +4,5 @@ import com.practice.kopring.oauth.application.AuthService
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-class AuthController(authService: AuthService) {
+class AuthController(private val authService: AuthService) {
 }
