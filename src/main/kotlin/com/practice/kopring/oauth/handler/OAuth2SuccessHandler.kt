@@ -31,8 +31,8 @@ class OAuth2SuccessHandler(
     }
 
     override fun onAuthenticationSuccess(
-        request: HttpServletRequest?,
-        response: HttpServletResponse?,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
         authentication: Authentication?
     ) {
         val oAuth2User: OAuth2User = authentication?.principal as OAuth2User
@@ -66,6 +66,6 @@ class OAuth2SuccessHandler(
             this.jwtTokenProvider.getExpiration(refreshToken).toInt()
         )
 
-        response?.sendRedirect(redirectUrl)
+        response.sendRedirect(redirectUrl)
     }
 }

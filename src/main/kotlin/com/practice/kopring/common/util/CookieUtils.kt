@@ -10,7 +10,7 @@ class CookieUtils {
             request.cookies?.firstOrNull { it.name == cookieName }
 
         fun addCookie(
-            response: HttpServletResponse?,
+            response: HttpServletResponse,
             name: String,
             value: String,
             maxAge: Int = 0
@@ -20,20 +20,18 @@ class CookieUtils {
                 it.isHttpOnly = true
                 it.path = "/"
                 it.maxAge = maxAge
-                response?.addCookie(it)
+                response.addCookie(it)
             }
         }
 
-        fun deleteCookie(request: HttpServletRequest?, response: HttpServletResponse?, name: String) {
-            request?.let {
-                getCookie(it, name)?.let { cookie: Cookie ->
-                    cookie.secure = true
-                    cookie.isHttpOnly = true
-                    cookie.path = "/"
-                    cookie.maxAge = 0
-                    cookie.value = ""
-                    response?.addCookie(cookie)
-                }
+        fun deleteCookie(request: HttpServletRequest, response: HttpServletResponse, name: String) {
+            getCookie(request, name)?.let { cookie: Cookie ->
+                cookie.secure = true
+                cookie.isHttpOnly = true
+                cookie.path = "/"
+                cookie.maxAge = 0
+                cookie.value = ""
+                response.addCookie(cookie)
             }
         }
     }
