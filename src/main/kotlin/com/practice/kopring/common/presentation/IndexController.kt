@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController
 class IndexController {
     @GetMapping(value = ["/"])
     fun index(): ResponseEntity<String> {
+        println("IndexController.index")
         return ResponseEntity.ok("ok")
     }
 }
