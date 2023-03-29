@@ -1,6 +1,7 @@
 package com.practice.kopring.oauth.filter
 
 import com.practice.kopring.auth.application.JwtTokenProvider
+import com.practice.kopring.oauth.domain.enumerate.Token
 import com.practice.kopring.user.application.UserRedisCacheService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -13,10 +14,6 @@ class JwtFilter(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userRedisCacheService: UserRedisCacheService
 ) : OncePerRequestFilter() {
-    companion object {
-        private const val AUTHORIZATION_HEADER: String = "Authorization"
-        private const val BEARER_PREFIX: String = "Bearer "
-    }
 
     override fun doFilterInternal(
         request: HttpServletRequest,
@@ -35,9 +32,12 @@ class JwtFilter(
     }
 
     private fun resolveToken(request: HttpServletRequest): String? {
-        val bearerToken: String? = request.getHeader(AUTHORIZATION_HEADER)
-        return if (!bearerToken.isNullOrBlank() && bearerToken.startsWith(BEARER_PREFIX))
-            bearerToken.replace(BEARER_PREFIX, "")
-        else null
+        val bearerToken: String? = request.getHeader(Token.AUTHORIZATION_HEADER.value)
+        return when {
+            !bearerToken.isNullOrBlank() && bearerToken.startsWith(Token.BEARER_PREFIX.value) ->
+                bearerToken.replace(Token.BEARER_PREFIX.value, "")
+
+            else -> null
+        }
     }
 }

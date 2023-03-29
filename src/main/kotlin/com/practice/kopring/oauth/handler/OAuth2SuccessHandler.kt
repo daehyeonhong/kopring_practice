@@ -3,6 +3,7 @@ package com.practice.kopring.oauth.handler
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.auth.domain.RefreshToken
 import com.practice.kopring.common.util.CookieUtils
+import com.practice.kopring.oauth.domain.enumerate.Token
 import com.practice.kopring.user.application.CustomOAuth2UserService
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.application.UserService
@@ -25,10 +26,6 @@ class OAuth2SuccessHandler(
     private val userRedisCacheService: UserRedisCacheService,
     private val jwtTokenProvider: JwtTokenProvider
 ) : SimpleUrlAuthenticationSuccessHandler() {
-    companion object {
-        private const val ACCESS_TOKEN: String = "ACCESS-TOKEN"
-        private const val REFRESH_TOKEN: String = "REFRESH-TOKEN"
-    }
 
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
@@ -54,14 +51,14 @@ class OAuth2SuccessHandler(
 
         CookieUtils.addCookie(
             response,
-            ACCESS_TOKEN,
+            Token.ACCESS_TOKEN.value,
             accessToken,
             this.jwtTokenProvider.getExpiration(accessToken).toInt()
         )
 
         CookieUtils.addCookie(
             response,
-            REFRESH_TOKEN,
+            Token.REFRESH_TOKEN.value,
             refreshToken,
             this.jwtTokenProvider.getExpiration(refreshToken).toInt()
         )

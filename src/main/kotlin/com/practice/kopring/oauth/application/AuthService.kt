@@ -6,6 +6,7 @@ import com.practice.kopring.auth.domain.dto.JwtDto
 import com.practice.kopring.exception.oauth.TokenExpiredException
 import com.practice.kopring.exception.oauth.TokenInvalidException
 import com.practice.kopring.exception.user.NotExistsUserException
+import com.practice.kopring.oauth.domain.enumerate.Token
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.domain.entity.UserEntity
 import com.practice.kopring.user.infrastructure.UserRepository
@@ -40,7 +41,7 @@ class AuthService(
         )
 
         return JwtDto(
-            grantType = "Bearer",
+            grantType = Token.BEARER.value,
             accessToken = newAccessToken,
             refreshToken = refreshToken,
             accessTokenExpiresIn = this.jwtTokenProvider.getExpiration(newAccessToken)

@@ -44,10 +44,10 @@ class CustomOAuth2UserService(
         val data: Map<String, Any> = oauth2User.attributes
         val email: String = data["email"] as String
 
-        val findByEmail = userRepository.findByEmail(email)
+        val userEntity: UserEntity? = userRepository.findByEmail(email)
         val name = data["name"] as String
         val picture = data["picture"] as String
-        if (findByEmail == null) return this.userRepository.save(
+        if (userEntity == null) return this.userRepository.save(
             UserEntity(
                 name = name,
                 email = email,
@@ -56,9 +56,9 @@ class CustomOAuth2UserService(
                 provider = provider
             )
         ) else {
-            if (findByEmail.provider === provider) {
-                findByEmail.loginUpdate(name, picture)
-                return this.userRepository.save(findByEmail)
+            if (userEntity.provider === provider) {
+                userEntity.loginUpdate(name, picture)
+                return userEntity
             }
             throw InvalidUserProviderException()
         }
