@@ -87,7 +87,11 @@ dependencies {
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
-    runtimeOnly("com.mysql:mysql-connector-j")
+    runtimeOnly("com.oracle.database.jdbc:ojdbc10:19.18.0.0")
+    runtimeOnly("com.oracle.database.security:osdt_cert")
+    runtimeOnly("com.oracle.database.security:oraclepki")
+    runtimeOnly("com.oracle.database.security:osdt_core")
+
     annotationProcessor("org.springframework.boot:spring-boot-configuration-processor")
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
