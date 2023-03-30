@@ -2,15 +2,19 @@ spring:
   output:
     ansi:
       enabled: always
-  jpa:
-    open-in-view: false
-    hibernate:
-      ddl-auto: create-drop
-    show-sql: true
-  datasource:
-    url: jdbc:mysql://localhost:3306/springbatch?useUnicode=true&characterEncoding=utf8
-    username: root
-    password: root
-    driver-class-name: com.mysql.cj.jdbc.Driver
   profiles:
-    include: oauth
+    active:
+      - dev
+    group:
+      dev:
+        - oauth-dev
+        - database-dev
+        - security-dev
+      prd:
+        - oauth-prd
+        - database-prd
+        - security-prd
+    include:
+      - database
+      - oauth
+      - security
