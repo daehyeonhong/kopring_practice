@@ -1,4 +1,3 @@
-package com.practice.kopring.common.domain.entity
 
 import com.github.f4b6a3.ulid.UlidCreator
 import jakarta.persistence.Column
@@ -17,7 +16,7 @@ import org.springframework.data.domain.Persistable
 @MappedSuperclass
 abstract class PrimaryKeyEntity : Persistable<UUID> {
     @Id
-    @Column(columnDefinition = "BINARY(16)")
+    @Column(columnDefinition = "RAW")
     private val id: UUID = UlidCreator.getMonotonicUlid().toUuid()
 
     @CreatedDate
@@ -31,9 +30,8 @@ abstract class PrimaryKeyEntity : Persistable<UUID> {
     @Transient
     private var _isNew = true
 
-    override fun getId(): UUID = id
-
-    override fun isNew(): Boolean = _isNew
+    override fun getId(): UUID = this.id
+    override fun isNew(): Boolean = this._isNew
 
     override fun equals(other: Any?): Boolean {
         if (other == null) {
