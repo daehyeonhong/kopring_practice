@@ -15,7 +15,7 @@ import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 
 @Service
-class AuthService(
+class OAuth2Service(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userRepository: UserRepository,
     private val userRedisCacheService: UserRedisCacheService

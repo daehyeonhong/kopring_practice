@@ -50,19 +50,15 @@ class OAuth2SuccessHandler(
         )
 
         CookieUtils.addCookie(
-            response,
-            Token.ACCESS_TOKEN.value,
-            accessToken,
+            response, Token.ACCESS_TOKEN.value, accessToken,
             this.jwtTokenProvider.getExpiration(accessToken).toInt()
         )
 
         CookieUtils.addCookie(
-            response,
-            Token.REFRESH_TOKEN.value,
-            refreshToken,
+            response, Token.REFRESH_TOKEN.value, refreshToken,
             this.jwtTokenProvider.getExpiration(refreshToken).toInt()
         )
 
-        response.sendRedirect(redirectUrl)
+        response.sendRedirect(this.redirectUrl)
     }
 }
