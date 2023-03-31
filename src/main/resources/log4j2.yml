@@ -1,0 +1,72 @@
+Configutation:
+  name: Default
+  status: WARN
+
+  Properties:
+    Property:
+      - name: log-path
+        value: logs
+      - name: date-format
+        value: "%date{yyyy-MM-dd}"
+      - name: time-format
+        value: "[%date{ABSOLUTE}:%-5relative]"
+      - name: console-pattern
+        value: "[%highlight{%-5level}] %cyan{${time-format}}[%blue{%thread}] %magenta{%C{1.}}: %msg%n%throwable"
+      - name: file-pattern
+        value: "[%-5level] ${time-format}[%thread] %C{1.}: %msg%n%throwable"
+
+  Appenders:
+    Console:
+      name: Console_Appender
+      target: SYSTEM_OUT
+      PatternLayout:
+        alwaysWriteExceptions: true
+        charset: UTF-8
+        pattern: ${console-pattern}
+        disableAnsi: false
+    File:
+      name: File_Appender
+      fileName: ${log-path}/logfile.log
+      PatternLayout:
+        charset: UTF-8
+        pattern: ${file-pattern}
+    RollingFile:
+      - name: RollingFile_Appender
+        fileName: ${log-path}/rollingfile.log
+        filePattern: "logs/archive/${date-format}/rollingFile.log.gz"
+        PatternLayout:
+          charset: UTF-8
+          pattern: ${file-pattern}
+        Policies:
+          TimeBasedTriggeringPolicy:
+            interval: 1
+          SizeBasedTriggeringPolicy:
+            size: 200 KB
+        DefaultRollOverStrategy:
+          max: 10
+          fileIndex: min
+  Loggers:
+    Root:
+      level: INFO
+      AppenderRef:
+        - ref: Console_Appender
+        - ref: File_Appender
+        - ref: RollingFile_Appender
+    Logger:
+      - name: com.zen9ss.bo
+        additivity: false
+        level: DEBUG
+        AppenderRef:
+          - ref: Console_Appender
+          - ref: File_Appender
+          - ref: RollingFile_Appender
+      - name: org.hibernate.type.descriptor.sql.BasicBinder
+        additivity: false
+        level: TRACE
+        AppenderRef:
+          - ref: Console_Appender
+      - name: org.hibernate.SQL
+        additivity: false
+        level: DEBUG
+        AppenderRef:
+          - ref: Console_Appender

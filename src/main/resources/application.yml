@@ -18,3 +18,5 @@ spring:
       - database
       - oauth
       - security
+logging:
+  config: classpath:log4j2.yml
