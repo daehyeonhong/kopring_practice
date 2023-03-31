@@ -1,6 +1,7 @@
 package com.practice.kopring.exception.handler
 
 import com.practice.kopring.common.dto.ErrorDto
+import com.practice.kopring.common.logger
 import com.practice.kopring.exception.BusinessException
 import jakarta.servlet.http.HttpServletRequest
 import java.util.*
@@ -18,6 +19,7 @@ class GlobalExceptionHandler {
         exception: BusinessException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
+        logger().error(exception.javaClass.name, exception)
         val errorMessage = exception.errorMessage
         return ResponseEntity
             .status(errorMessage.status)
@@ -34,11 +36,13 @@ class GlobalExceptionHandler {
         exception: MethodArgumentNotValidException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
+        logger().error(exception.javaClass.name, exception.bindingResult)
+        logger().error("requestUrl: {}", request.requestURL)
         return ResponseEntity
             .status(BAD_REQUEST)
             .body(
                 ErrorDto(
-                    exception.javaClass.name,
+                    "MethodArgumentNotValidException",
                     exception.message
                 )
             )
@@ -49,14 +53,12 @@ class GlobalExceptionHandler {
         exception: RequestRejectedException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
-        val errorMessage: String =
-            "${exception.cause.toString()}\n${exception.localizedMessage}${Arrays.toString(exception.stackTrace)}"
         return ResponseEntity
             .status(BAD_REQUEST)
             .body(
                 ErrorDto(
-                    exception.message as String,
-                    errorMessage
+                    exception.javaClass.name,
+                    exception.localizedMessage
                 )
             )
     }
@@ -66,6 +68,7 @@ class GlobalExceptionHandler {
         exception: Exception,
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
+        logger().error(exception.javaClass.name, exception)
         return ResponseEntity
             .status(BAD_REQUEST)
             .body(
