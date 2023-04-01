@@ -3,7 +3,7 @@ package com.practice.kopring.auth.application
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.DecodedJWT
-import com.practice.kopring.user.domain.enumerate.Role
+import com.practice.kopring.user.enumerate.Role
 import java.util.*
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
