@@ -1,11 +1,10 @@
 package com.practice.kopring.config.security
 
+import com.practice.kopring.auth.dto.AuthInfo
+import com.practice.kopring.auth.dto.AuthUser
 import com.practice.kopring.exception.oauth.NotExistsOauthInfoException
-import com.practice.kopring.oauth.dto.AuthInfo
-import com.practice.kopring.oauth.dto.AuthUser
-import com.practice.kopring.user.domain.enumerate.Role
+import com.practice.kopring.user.enumerate.Role
 import java.util.*
-import java.util.stream.Collectors
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -32,19 +31,18 @@ class LoginArgumentResolver : HandlerMethodArgumentResolver {
         binderFactory: WebDataBinderFactory?
     ): Any {
         val authentication: Authentication = SecurityContextHolder.getContext().authentication
-        if (authentication.principal == "anonymousUser") {
-            throw NotExistsOauthInfoException()
+        return when {
+            (authentication.principal == "anonymousUser") -> throw NotExistsOauthInfoException()
+            else -> AuthInfo(
+                id = authentication.principal as UUID,
+                roles = this.rolesFromAuthorities(authentication.authorities)
+            )
         }
-
-        return AuthInfo(
-            authentication.principal as UUID,
-            roles = this.rolesFromAuthorities(authentication.authorities)
-        )
     }
 
-    private fun rolesFromAuthorities(authorities: Collection<GrantedAuthority?>): Set<Any>? {
-        return authorities.stream()
-            .map<Any> { authority: GrantedAuthority? -> Role.of(authority?.authority) }
-            .collect(Collectors.toSet())
+    private fun rolesFromAuthorities(authorities: Collection<GrantedAuthority?>): Set<Any> {
+        return setOf(authorities.map { authority: GrantedAuthority? ->
+            Role.of(authority?.authority)
+        })
     }
 }
