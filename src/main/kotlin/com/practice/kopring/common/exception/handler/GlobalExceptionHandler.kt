@@ -1,8 +1,8 @@
-package com.practice.kopring.exception.handler
+package com.practice.kopring.common.exception.handler
 
 import com.practice.kopring.common.dto.ErrorDto
 import com.practice.kopring.common.logger
-import com.practice.kopring.exception.BusinessException
+import com.practice.kopring.common.exception.BusinessException
 import jakarta.servlet.http.HttpServletRequest
 import java.util.*
 import org.slf4j.Logger

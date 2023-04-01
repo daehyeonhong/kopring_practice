@@ -1,4 +1,4 @@
-package com.practice.kopring.exception
+package com.practice.kopring.common.exception
 
 import com.practice.kopring.common.enumerate.ErrorMessage
 
