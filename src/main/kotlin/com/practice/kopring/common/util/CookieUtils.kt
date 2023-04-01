@@ -1,6 +1,6 @@
 package com.practice.kopring.common.util
 
-import com.practice.kopring.oauth.domain.enumerate.Token
+import com.practice.kopring.auth.enumerate.Token
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

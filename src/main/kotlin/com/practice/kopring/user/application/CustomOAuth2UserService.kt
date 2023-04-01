@@ -1,10 +1,10 @@
 package com.practice.kopring.user.application
 
 import com.practice.kopring.exception.oauth.InvalidUserProviderException
-import com.practice.kopring.user.domain.entity.UserEntity
-import com.practice.kopring.user.domain.enumerate.Provider
-import com.practice.kopring.user.domain.enumerate.Role
+import com.practice.kopring.user.domain.UserEntity
 import com.practice.kopring.user.dto.OAuthAttributes
+import com.practice.kopring.user.enumerate.Provider
+import com.practice.kopring.user.enumerate.Role
 import com.practice.kopring.user.infrastructure.UserRepository
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService

@@ -1,6 +1,6 @@
 package com.practice.kopring.user.application
 
-import com.practice.kopring.user.domain.entity.UserEntity
+import com.practice.kopring.user.domain.UserEntity
 import com.practice.kopring.user.infrastructure.UserRepository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

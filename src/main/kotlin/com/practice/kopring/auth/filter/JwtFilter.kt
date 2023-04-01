@@ -1,7 +1,7 @@
-package com.practice.kopring.oauth.filter
+package com.practice.kopring.auth.filter
 
 import com.practice.kopring.auth.application.JwtTokenProvider
-import com.practice.kopring.oauth.domain.enumerate.Token
+import com.practice.kopring.auth.enumerate.Token
 import com.practice.kopring.user.application.UserRedisCacheService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest

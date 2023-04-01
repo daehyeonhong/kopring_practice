@@ -1,4 +1,4 @@
-package com.practice.kopring.auth.domain.dto
+package com.practice.kopring.auth.dto
 
 data class JwtDto(
     val grantType: String,

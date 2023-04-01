@@ -1,8 +1,8 @@
-package com.practice.kopring.user.domain.entity
+package com.practice.kopring.user.domain
 
-import PrimaryKeyEntity
-import com.practice.kopring.user.domain.enumerate.Provider
-import com.practice.kopring.user.domain.enumerate.Role
+import com.practice.kopring.common.domain.PrimaryKeyEntity
+import com.practice.kopring.user.enumerate.Provider
+import com.practice.kopring.user.enumerate.Role
 import jakarta.persistence.*
 
 @Entity

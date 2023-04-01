@@ -1,14 +1,14 @@
 package com.practice.kopring.oauth.application
 
 import com.practice.kopring.auth.application.JwtTokenProvider
-import com.practice.kopring.auth.domain.RefreshToken
-import com.practice.kopring.auth.domain.dto.JwtDto
+import com.practice.kopring.auth.dto.JwtDto
+import com.practice.kopring.auth.dto.RefreshToken
+import com.practice.kopring.auth.enumerate.Token
 import com.practice.kopring.exception.oauth.TokenExpiredException
 import com.practice.kopring.exception.oauth.TokenInvalidException
 import com.practice.kopring.exception.user.NotExistsUserException
-import com.practice.kopring.oauth.domain.enumerate.Token
 import com.practice.kopring.user.application.UserRedisCacheService
-import com.practice.kopring.user.domain.entity.UserEntity
+import com.practice.kopring.user.domain.UserEntity
 import com.practice.kopring.user.infrastructure.UserRepository
 import java.util.*
 import org.springframework.data.repository.findByIdOrNull

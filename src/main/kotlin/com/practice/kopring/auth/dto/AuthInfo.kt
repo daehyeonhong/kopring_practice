@@ -1,4 +1,4 @@
-package com.practice.kopring.oauth.dto
+package com.practice.kopring.auth.dto
 
 import java.util.*
 

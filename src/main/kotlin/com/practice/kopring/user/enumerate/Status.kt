@@ -1,4 +1,4 @@
-package com.practice.kopring.user.domain.enumerate
+package com.practice.kopring.user.enumerate
 
 enum class Status(
     val description: String

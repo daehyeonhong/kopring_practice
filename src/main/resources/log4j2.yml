@@ -5,7 +5,7 @@ Configutation:
   Properties:
     Property:
       - name: log-path
-        value: logs
+        value: out/logs
       - name: date-format
         value: "%date{yyyy-MM-dd}"
       - name: time-format

@@ -1,4 +1,4 @@
-package com.practice.kopring.oauth.domain.enumerate
+package com.practice.kopring.auth.enumerate
 
 enum class Token(val value: String) {
     ACCESS_TOKEN("access_token"),

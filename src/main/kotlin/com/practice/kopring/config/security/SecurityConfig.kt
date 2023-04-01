@@ -1,11 +1,11 @@
 package com.practice.kopring.config.security
 
 import com.practice.kopring.auth.application.JwtTokenProvider
-import com.practice.kopring.oauth.filter.JwtFilter
+import com.practice.kopring.auth.filter.JwtFilter
 import com.practice.kopring.oauth.handler.OAuth2SuccessHandler
 import com.practice.kopring.user.application.CustomOAuth2UserService
 import com.practice.kopring.user.application.UserRedisCacheService
-import com.practice.kopring.user.domain.enumerate.Role
+import com.practice.kopring.user.enumerate.Role
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity

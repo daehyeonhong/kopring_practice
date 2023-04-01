@@ -1,7 +1,7 @@
 package com.practice.kopring.user.application
 
-import com.practice.kopring.auth.domain.RefreshToken
-import com.practice.kopring.user.domain.enumerate.UserRedisKey
+import com.practice.kopring.auth.dto.RefreshToken
+import com.practice.kopring.user.enumerate.UserRedisKey
 import java.util.concurrent.TimeUnit
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.data.redis.core.ValueOperations

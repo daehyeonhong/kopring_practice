@@ -1,4 +1,4 @@
-package com.practice.kopring.user.domain.enumerate
+package com.practice.kopring.user.enumerate
 
 import com.practice.kopring.exception.user.InvalidUserRoleException
 

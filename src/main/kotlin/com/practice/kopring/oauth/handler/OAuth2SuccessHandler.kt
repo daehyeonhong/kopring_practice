@@ -1,14 +1,14 @@
 package com.practice.kopring.oauth.handler
 
 import com.practice.kopring.auth.application.JwtTokenProvider
-import com.practice.kopring.auth.domain.RefreshToken
+import com.practice.kopring.auth.dto.RefreshToken
+import com.practice.kopring.auth.enumerate.Token
 import com.practice.kopring.common.util.CookieUtils
-import com.practice.kopring.oauth.domain.enumerate.Token
 import com.practice.kopring.user.application.CustomOAuth2UserService
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.application.UserService
-import com.practice.kopring.user.domain.entity.UserEntity
-import com.practice.kopring.user.domain.enumerate.Provider
+import com.practice.kopring.user.domain.UserEntity
+import com.practice.kopring.user.enumerate.Provider
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value

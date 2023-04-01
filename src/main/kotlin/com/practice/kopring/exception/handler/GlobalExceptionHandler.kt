@@ -5,7 +5,8 @@ import com.practice.kopring.common.logger
 import com.practice.kopring.exception.BusinessException
 import jakarta.servlet.http.HttpServletRequest
 import java.util.*
-import org.springframework.http.HttpStatus.BAD_REQUEST
+import org.slf4j.Logger
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.web.firewall.RequestRejectedException
 import org.springframework.web.bind.MethodArgumentNotValidException
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
+    companion object {
+        private val logger: Logger = logger()
+    }
+
     @ExceptionHandler(value = [BusinessException::class])
     protected fun handlerBusinessException(
         exception: BusinessException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
-        logger().error(exception.javaClass.name, exception)
+        logger.error(exception.javaClass.name, exception)
         val errorMessage = exception.errorMessage
         return ResponseEntity
             .status(errorMessage.status)
@@ -36,10 +41,10 @@ class GlobalExceptionHandler {
         exception: MethodArgumentNotValidException,
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
-        logger().error(exception.javaClass.name, exception.bindingResult)
-        logger().error("requestUrl: {}", request.requestURL)
+        logger.error(exception.javaClass.name, exception.bindingResult)
+        logger.error("requestUrl: {}", request.requestURL)
         return ResponseEntity
-            .status(BAD_REQUEST)
+            .status(HttpStatus.BAD_REQUEST)
             .body(
                 ErrorDto(
                     "MethodArgumentNotValidException",
@@ -54,7 +59,7 @@ class GlobalExceptionHandler {
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
         return ResponseEntity
-            .status(BAD_REQUEST)
+            .status(HttpStatus.BAD_REQUEST)
             .body(
                 ErrorDto(
                     exception.javaClass.name,
@@ -68,9 +73,9 @@ class GlobalExceptionHandler {
         exception: Exception,
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
-        logger().error(exception.javaClass.name, exception)
+        logger.error(exception.javaClass.name, exception)
         return ResponseEntity
-            .status(BAD_REQUEST)
+            .status(HttpStatus.BAD_REQUEST)
             .body(
                 ErrorDto(
                     exception.message as String,

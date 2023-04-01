@@ -1,4 +1,4 @@
-package com.practice.kopring.auth.domain
+package com.practice.kopring.auth.dto
 
 import org.springframework.data.redis.core.RedisHash
 
