@@ -17,7 +17,7 @@ import org.springframework.web.cors.CorsUtils
 
 @Configuration
 @EnableWebSecurity
-class SecurityConfig constructor(
+class SecurityConfiguration(
     private val customOAuth2UserService: CustomOAuth2UserService,
     private val oAuth2SuccessHandler: OAuth2SuccessHandler,
     private val userRedisCacheService: UserRedisCacheService,
