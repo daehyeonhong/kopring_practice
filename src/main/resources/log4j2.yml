@@ -32,8 +32,8 @@ Configutation:
         pattern: ${file-pattern}
     RollingFile:
       - name: RollingFile_Appender
-        fileName: ${log-path}/rollingfile.log
-        filePattern: "logs/archive/${date-format}/rollingFile.log.gz"
+        fileName: ${log-path}/rollingFile.log
+        filePattern: ${log-path}/archive/${date-format}/rollingFile.log.gz
         PatternLayout:
           charset: UTF-8
           pattern: ${file-pattern}
