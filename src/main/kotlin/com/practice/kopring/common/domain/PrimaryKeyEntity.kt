@@ -35,22 +35,15 @@ abstract class PrimaryKeyEntity : Persistable<UUID> {
     override fun isNew(): Boolean = this._isNew
 
     override fun equals(other: Any?): Boolean {
-        if (other == null) {
-            return false
-        }
-
-        if (other !is HibernateProxy && this::class != other::class) {
-            return false
-        }
-
+        other ?: return false
+        if (other !is HibernateProxy && this::class != other::class) return false
         return id == getIdentifier(other)
     }
 
     private fun getIdentifier(obj: Any): Serializable {
-        return if (obj is HibernateProxy) {
-            obj.hibernateLazyInitializer.identifier as Serializable
-        } else {
-            (obj as PrimaryKeyEntity).id
+        return when (obj) {
+            is HibernateProxy -> obj.hibernateLazyInitializer.identifier as Serializable
+            else -> (obj as PrimaryKeyEntity).id
         }
     }
 

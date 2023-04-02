@@ -62,10 +62,7 @@ class JwtTokenProvider(
 
     fun getExpiration(accessToken: String): Long {
         val expiration: Date? = this.decodedJWT(accessToken)?.expiresAt
-        return when {
-            expiration != null -> expiration.time - System.currentTimeMillis()
-            else -> -1L
-        }
+        return expiration?.let { it.time - System.currentTimeMillis() } ?: -1L
     }
 
     fun resolveToken(request: HttpServletRequest): String? {
