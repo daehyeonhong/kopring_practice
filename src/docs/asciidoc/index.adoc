@@ -10,16 +10,4 @@
 :highlightjs-languages: java,xml,html,css,js,http
 :snippets: target/generated-snippets
 
-== 회원가입
-
-include::{snippets}/index-controller-tests/root-test/http-request.adoc[]
-include::{snippets}/index-controller-tests/root-test/http-response.adoc[]
-include::{snippets}/index-controller-tests/root-test/curl-request.adoc[]
-// include::{snippets}/index-controller-tests/root-test/response-fields.adoc[]
-
-== 회원가입
-
-include::{snippets}/index-controller-tests/root-test/http-request.adoc[]
-include::{snippets}/index-controller-tests/root-test/http-response.adoc[]
-include::{snippets}/index-controller-tests/root-test/curl-request.adoc[]
-// include::{snippets}/index-controller-tests/root-test/response-fields.adoc[]
+include::oauth2.adoc[]

@@ -1,0 +1,5 @@
+[source,bash]
+----
+$ curl 'http://localhost:8080/oauth2/authorization/{registrationId}' -i -X GET \
+
+----
