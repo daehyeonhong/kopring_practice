@@ -1,5 +1,6 @@
 package com.practice.kopring.user.domain.enumerate
 
+import com.practice.kopring.user.enumerate.Provider
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource

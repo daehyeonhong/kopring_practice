@@ -1,6 +1,7 @@
 package com.practice.kopring.user.domain.enumerate
 
-import com.practice.kopring.exception.user.InvalidUserRoleException
+import com.practice.kopring.common.exception.user.InvalidUserRoleException
+import com.practice.kopring.user.enumerate.Role
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
