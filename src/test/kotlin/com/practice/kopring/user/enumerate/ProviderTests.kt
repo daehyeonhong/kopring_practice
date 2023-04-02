@@ -1,4 +1,4 @@
-package com.practice.kopring.user.domain.enumerate
+package com.practice.kopring.user.enumerate
 
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.params.ParameterizedTest
