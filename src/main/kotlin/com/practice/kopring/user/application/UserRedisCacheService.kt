@@ -4,7 +4,6 @@ import com.practice.kopring.auth.dto.RefreshToken
 import com.practice.kopring.user.enumerate.UserRedisKey
 import java.util.concurrent.TimeUnit
 import org.springframework.data.redis.core.RedisTemplate
-import org.springframework.data.redis.core.ValueOperations
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,12 +15,11 @@ class UserRedisCacheService(
     fun getWithUserId(userId: String): String? = redisTemplate.opsForValue()["${UserRedisKey.USER_KEY.value}:${userId}"]
 
     fun save(refreshToken: RefreshToken, expiredTime: Long) {
-        val valueOperations: ValueOperations<String, String> = this.redisTemplate.opsForValue()
-        valueOperations.set(refreshToken.refreshToken, refreshToken.userId)
-        this.redisTemplate.expire(refreshToken.refreshToken, expiredTime, TimeUnit.MILLISECONDS)
+        redisTemplate.opsForValue()[UserRedisKey.USER_KEY.value + ":" + refreshToken.userId, refreshToken.refreshToken, expiredTime] =
+            TimeUnit.MILLISECONDS
     }
 
-    fun delete(userId: Long) {
+    fun delete(userId: String) {
         redisTemplate.delete("${UserRedisKey.USER_KEY.value}:${userId}")
     }
 }

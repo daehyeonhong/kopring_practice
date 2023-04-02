@@ -2,7 +2,7 @@ package com.practice.kopring.config.security
 
 import com.practice.kopring.auth.dto.AuthInfo
 import com.practice.kopring.auth.dto.AuthUser
-import com.practice.kopring.exception.oauth.NotExistsOauthInfoException
+import com.practice.kopring.common.exception.oauth.NotExistsOauthInfoException
 import com.practice.kopring.user.enumerate.Role
 import java.util.*
 import org.springframework.core.MethodParameter

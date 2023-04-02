@@ -1,27 +1,26 @@
-package com.practice.kopring.oauth.application
+package com.practice.kopring.auth.application
 
-import com.practice.kopring.auth.application.JwtTokenProvider
-import com.practice.kopring.auth.dto.JwtDto
+import com.practice.kopring.auth.dto.JwtTokenResponse
 import com.practice.kopring.auth.dto.RefreshToken
-import com.practice.kopring.auth.enumerate.Token
-import com.practice.kopring.exception.oauth.TokenExpiredException
-import com.practice.kopring.exception.oauth.TokenInvalidException
-import com.practice.kopring.exception.user.NotExistsUserException
+import com.practice.kopring.common.exception.auth.TokenExpiredException
+import com.practice.kopring.common.exception.auth.TokenInvalidException
+import com.practice.kopring.common.exception.user.NotExistsUserException
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.domain.UserEntity
 import com.practice.kopring.user.infrastructure.UserRepository
 import java.util.*
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
-class OAuth2Service(
+class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userRepository: UserRepository,
     private val userRedisCacheService: UserRedisCacheService
 ) {
-    fun refresh(refreshToken: String?): JwtDto {
-        val userId: String? = this.jwtTokenProvider.getAccountName(refreshToken)
+    fun refresh(refreshToken: String?): JwtTokenResponse {
+        val userId: String? = this.jwtTokenProvider.getUserId(refreshToken)
         if (userId.isNullOrBlank()) throw NotExistsUserException()
 
         val user: UserEntity = this.userRepository.findByIdOrNull(UUID.fromString(userId))
@@ -40,11 +39,18 @@ class OAuth2Service(
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
 
-        return JwtDto(
-            grantType = Token.BEARER.value,
+        return JwtTokenResponse(
             accessToken = newAccessToken,
             refreshToken = refreshToken,
-            accessTokenExpiresIn = this.jwtTokenProvider.getExpiration(newAccessToken)
         )
+    }
+
+    @Transactional
+    fun revokeToken(accessToken: String) {
+        val access: String? = this.jwtTokenProvider.resolveToken(accessToken)
+        if (!jwtTokenProvider.validate(access)) throw TokenInvalidException()
+        val userId: String = this.jwtTokenProvider.getUserId(access) ?: throw NotExistsUserException()
+        if (!this.userRepository.existsById(UUID.fromString(userId))) throw NotExistsUserException()
+        if (this.userRedisCacheService.getWithUserId(userId) != null) this.userRedisCacheService.delete(userId)
     }
 }

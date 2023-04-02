@@ -1,6 +1,6 @@
 package com.practice.kopring.user.dto
 
-import com.practice.kopring.exception.oauth.InvalidProviderException
+import com.practice.kopring.common.exception.oauth.InvalidProviderException
 import com.practice.kopring.user.enumerate.Provider
 
 
