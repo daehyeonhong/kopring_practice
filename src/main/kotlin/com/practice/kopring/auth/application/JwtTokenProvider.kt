@@ -28,8 +28,7 @@ class JwtTokenProvider(
     private val algorithm: Algorithm = Algorithm.HMAC512(this.secretKey)
 
     fun createAccessToken(id: String, role: Role): String {
-        return JWT
-            .create()
+        return JWT.create()
             .withSubject(id)
             .withClaim("role", role.key)
             .withIssuedAt(Date(System.currentTimeMillis()))
@@ -38,7 +37,9 @@ class JwtTokenProvider(
     }
 
     fun createRefreshToken(id: String): String {
-        return JWT.create().withSubject(id).withIssuedAt(Date(System.currentTimeMillis()))
+        return JWT.create()
+            .withSubject(id)
+            .withIssuedAt(Date(System.currentTimeMillis()))
             .withExpiresAt(Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRED_WEEK))
             .sign(this.algorithm)
     }

@@ -31,7 +31,7 @@ class SecurityConfiguration(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.NEVER) }
             .authorizeHttpRequests {
                 it.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                it.requestMatchers("/users/login", "/users/failure").permitAll()
+                it.requestMatchers("/users/login", "/users/failure", "/auth/refresh").permitAll()
 //                it.requestMatchers(HttpMethod.GET, "/users").permitAll()
                 it.anyRequest().hasRole(Role.USER.name)
             }
@@ -39,6 +39,9 @@ class SecurityConfiguration(
             it.userInfoEndpoint().userService(this.customOAuth2UserService)
             it.failureUrl("/users/failure")
             it.successHandler(this.oAuth2SuccessHandler)
+        }
+        http.logout {
+            it.logoutUrl("/auth/logout")
         }
         http.addFilterBefore(
             JwtFilter(this.jwtTokenProvider, this.userRedisCacheService),

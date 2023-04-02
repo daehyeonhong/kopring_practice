@@ -5,7 +5,6 @@ import com.practice.kopring.auth.dto.JwtTokenResponse
 import com.practice.kopring.common.dto.ResponseDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestHeader
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/auth")
 class AuthController(private val authService: AuthService) {
-    @PostMapping("/refresh")
+    @GetMapping("/refresh")
     fun refreshToken(
         @RequestHeader(value = "refresh_token") refreshToken: String?
     ): ResponseEntity<JwtTokenResponse> = ResponseDto.ok(this.authService.refresh(refreshToken))
