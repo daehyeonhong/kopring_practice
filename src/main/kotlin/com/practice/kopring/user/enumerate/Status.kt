@@ -7,6 +7,9 @@ enum class Status(
     SIGNUP(description = "회원가입");
 
     companion object {
-        fun of(check: Boolean): Status = if (check) SUCCESS else SIGNUP
+        fun of(check: Boolean): Status = when {
+            check -> SUCCESS
+            else -> SIGNUP
+        }
     }
 }

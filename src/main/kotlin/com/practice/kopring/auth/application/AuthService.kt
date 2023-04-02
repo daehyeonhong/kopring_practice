@@ -51,6 +51,6 @@ class AuthService(
         if (!jwtTokenProvider.validate(access)) throw TokenInvalidException()
         val userId: String = this.jwtTokenProvider.getUserId(access) ?: throw NotExistsUserException()
         if (!this.userRepository.existsById(UUID.fromString(userId))) throw NotExistsUserException()
-        if (this.userRedisCacheService.getWithUserId(userId) != null) this.userRedisCacheService.delete(userId)
+        this.userRedisCacheService.getWithUserId(userId)?.let { this.userRedisCacheService.delete(it) }
     }
 }
