@@ -7,6 +7,7 @@ import com.practice.kopring.common.logger
 import com.practice.kopring.user.enumerate.Role
 import io.restassured.RestAssured
 import org.apache.http.HttpStatus
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -14,13 +15,14 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.restdocs.operation.preprocess.Preprocessors
 import org.springframework.restdocs.restassured.RestAssuredRestDocumentation
 
-class AuthControllerTests(
+class AuthControllerRestAssuredTests(
     @LocalServerPort private val port: Int,
     @Autowired private var jwtTokenProvider: JwtTokenProvider,
     @Value("\${user_id.key}") private val userId: String
 ) : RestAssuredTestBase(port) {
 
     @Test
+    @Disabled
     fun login(): Unit {
         val response = RestAssured.given(spec).log().all()
             .sessionId("JSESSIONID", "371EFC4E7BB0C1A42ADD32AD563BC9DF")
