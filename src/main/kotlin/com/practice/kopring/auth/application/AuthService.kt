@@ -46,7 +46,7 @@ class AuthService(
     }
 
     @Transactional
-    fun revokeToken(accessToken: String) {
+    fun revokeToken(accessToken: String): Unit {
         val access: String? = this.jwtTokenProvider.resolveToken(accessToken)
         if (!jwtTokenProvider.validate(access)) throw TokenInvalidException()
         val userId: String = this.jwtTokenProvider.getUserId(access) ?: throw NotExistsUserException()

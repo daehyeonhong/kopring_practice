@@ -1,8 +1,9 @@
 package com.practice.kopring.common.exception.handler
 
 import com.practice.kopring.common.dto.ErrorDto
-import com.practice.kopring.common.logger
+import com.practice.kopring.common.enumerate.ErrorMessage
 import com.practice.kopring.common.exception.BusinessException
+import com.practice.kopring.common.logger
 import jakarta.servlet.http.HttpServletRequest
 import java.util.*
 import org.slf4j.Logger
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 @RestControllerAdvice
 class GlobalExceptionHandler {
     companion object {
-        private val logger: Logger = logger()
+        private val logger: Logger = this.logger()
     }
 
     @ExceptionHandler(value = [BusinessException::class])
@@ -25,7 +26,7 @@ class GlobalExceptionHandler {
         request: HttpServletRequest
     ): ResponseEntity<ErrorDto> {
         logger.error(exception.javaClass.name, exception)
-        val errorMessage = exception.errorMessage
+        val errorMessage: ErrorMessage = exception.errorMessage
         return ResponseEntity
             .status(errorMessage.status)
             .body(
