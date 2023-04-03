@@ -3,10 +3,12 @@ package com.practice.kopring.auth.presentation
 import com.practice.kopring.MvcRestDocsConfiguration
 import com.practice.kopring.auth.application.AuthService
 import com.practice.kopring.auth.dto.JwtTokenResponse
+import com.practice.kopring.auth.enumerate.Token
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyString
 import org.mockito.BDDMockito.given
+import org.mockito.kotlin.doNothing
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest
@@ -39,7 +41,6 @@ class AuthControllerMockTest {
     fun refreshToken(): Unit {
         given(this.authService.refresh(anyString()))
             .willReturn(JwtTokenResponse("accessToken", "refreshToken"))
-
         mockMvc.perform(
             get("/auth/refresh")
                 .header("refresh_token", "refreshToken")
@@ -51,12 +52,40 @@ class AuthControllerMockTest {
             }
             .andDo(
                 document(
-                    "auth/refresh",
+                    "{class-name}/{method-name}",
                     responseFields(
                         fieldWithPath("accessToken").type(JsonFieldType.STRING).description("액세스토큰"),
                         fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("갱신토큰")
                     )
                 )
             )
+    }
+
+    @Test
+    @WithMockUser
+    fun logout(): Unit {
+        doNothing().`when`(this.authService).revokeToken(
+            anyString()
+        )
+        mockMvc.perform(
+            get("/auth/logout")
+                .header("Authorization", "${Token.BEARER_PREFIX.value}dummyToken")
+        )
+            .andExpect(status().isNoContent)
+            .andDo(document("{class-name}/{method-name}"))
+    }
+
+    @Test
+    @WithMockUser
+    fun header(): Unit {
+        doNothing().`when`(this.authService).revokeToken(
+            anyString()
+        )
+        mockMvc.perform(
+            get("/auth/logout")
+                .header("Authorization", "${Token.BEARER_PREFIX.value}dummyToken")
+        )
+            .andExpect(status().isNoContent)
+            .andDo(document("{class-name}/{method-name}"))
     }
 }

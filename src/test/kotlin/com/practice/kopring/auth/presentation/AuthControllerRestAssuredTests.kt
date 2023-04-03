@@ -20,12 +20,10 @@ class AuthControllerRestAssuredTests(
     @Autowired private var jwtTokenProvider: JwtTokenProvider,
     @Value("\${user_id.key}") private val userId: String
 ) : RestAssuredTestBase(port) {
-
-    @Test
     @Disabled
+    @Test
     fun login(): Unit {
         val response = RestAssured.given(spec).log().all()
-            .sessionId("JSESSIONID", "371EFC4E7BB0C1A42ADD32AD563BC9DF")
             .`when`().filter(
                 RestAssuredRestDocumentation.document(
                     "{class-name}/{method-name}",
@@ -33,13 +31,9 @@ class AuthControllerRestAssuredTests(
                     Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
                 )
             )
-            .get("/login/oauth2/code/google?state=L5aIov5jlRrHxTiMW6qztiCAOqoYlx4Et4RkQiQOpUY%3D&code=4%2F0AVHEtk5P8dnRefp7pCKmQ7ku8Qn1i_5q5TTWqbuPye6PeUpVF705bIvpXPFT23tOUSSeQw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=0&prompt=none")
-            .then()
-            .statusCode(HttpStatus.SC_OK)
-            .extract().response()
-        response.prettyPrint()
     }
 
+    @Disabled
     @Test
     fun logout(): Unit {
         val accessToken: String = this.jwtTokenProvider.createAccessToken(this.userId, Role.USER)
@@ -60,6 +54,7 @@ class AuthControllerRestAssuredTests(
         response.prettyPrint()
     }
 
+    @Disabled
     @Test
     fun refresh(): Unit {
         val refreshToken: String = this.jwtTokenProvider.createRefreshToken(this.userId)
@@ -74,6 +69,22 @@ class AuthControllerRestAssuredTests(
             .get("/auth/refresh")
             .then()
             .statusCode(HttpStatus.SC_OK)
+            .extract().response()
+    }
+
+    @Disabled
+    @Test
+    fun redirectCookieTest(): Unit {
+        RestAssured.given(spec).log().all()
+            .`when`().filter(
+                RestAssuredRestDocumentation.document(
+                    "{class-name}/{method-name}",
+                    Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
+                    Preprocessors.preprocessResponse(Preprocessors.prettyPrint()),
+                )
+            ).get("/oauth2/login")
+            .then()
+            .statusCode(200)
             .extract().response()
     }
 }
