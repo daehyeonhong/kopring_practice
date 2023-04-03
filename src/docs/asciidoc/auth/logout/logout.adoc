@@ -1,0 +1,10 @@
+==== 로그아웃
+
+.HTTP Request
+include::{snippets}/auth-controller-mock-test/logout/http-request.adoc[]
+.HTTP Response
+include::{snippets}/auth-controller-mock-test/logout/http-response.adoc[]
+.CURL Request
+include::{snippets}/auth-controller-mock-test/logout/curl-request.adoc[]
+.HTTPie Request
+include::{snippets}/auth-controller-mock-test/logout/httpie-request.adoc[]

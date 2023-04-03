@@ -1,0 +1,11 @@
+==== 인증요청
+
+[stem]
+.HTTP Request
+include::http-request.adoc[]
+.HTTP Response
+include::http-response.adoc[]
+.Curl Request
+include::curl-request.adoc[]
+.Httpie Request
+include::httpie-request.adoc[]

@@ -1,6 +1,6 @@
 = restDocs
 :toc: left
-:toclevels: 2
+:toclevels: 3
 :sectlinks:
 :docktype: book
 :source-highlighter: highlightjs
@@ -10,4 +10,5 @@
 :highlightjs-languages: java,xml,html,css,js,http
 :snippets: target/generated-snippets
 
-include::oauth2.adoc[]
+include::oauth2/oauth2.adoc[]
+include::auth/auth.adoc[]

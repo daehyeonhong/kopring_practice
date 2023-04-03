@@ -1,0 +1,6 @@
+==== 기본헤더
+
+.HTTP Request
+include::{snippets}/auth-controller-mock-test/header/http-request.adoc[]
+.HTTP Response
+include::{snippets}/auth-controller-mock-test/header/http-response.adoc[]

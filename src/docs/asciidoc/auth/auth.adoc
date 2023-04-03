@@ -1,0 +1,8 @@
+== 계정권한
+
+=== 계정권한은 계정의 권한을 설정하는 기능입니다.
+
+[stem]
+include::header/default-header.adoc[]
+include::refresh-token/refresh-token.adoc[]
+include::logout/logout.adoc[]
