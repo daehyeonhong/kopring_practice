@@ -1,4 +1,5 @@
 = restDocs
+
 :toc: left
 :toclevels: 3
 :sectlinks:
@@ -8,7 +9,7 @@
 :source-language: java
 :highlightjs-theme: github
 :highlightjs-languages: java,xml,html,css,js,http
-:snippets: target/generated-snippets
+:docs: src/docs/asciidoc
 
-include::oauth2/oauth2.adoc[]
-include::auth/auth.adoc[]
+include::./oauth2/oauth2.adoc[]
+include::./auth/auth.adoc[]
