@@ -44,17 +44,6 @@ tasks {
         baseDirFollowsSourceFile()
         inputs.dir(snippetsDir)
         dependsOn(test)
-        doFirst {
-            delete {
-                file("src/main/resources/static/docs")
-            }
-        }
-        doLast {
-            copy {
-                from("build/docs/asciidoc")
-                into("src/main/resources/static/docs")
-            }
-        }
     }
     build {
         dependsOn(asciidoctor)
