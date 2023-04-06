@@ -1,3 +1,4 @@
+import org.asciidoctor.gradle.jvm.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -34,19 +35,23 @@ configurations {
     }
 }
 
-val snippetsDir by extra { file("build/generated-snippets") }
+val snippetsDir by extra {
+    file("build/generated-snippets")
+}
 
 tasks {
-    test {
-        outputs.dir(snippetsDir)
-    }
-    asciidoctor {
-        baseDirFollowsSourceFile()
-        inputs.dir(snippetsDir)
+    val asciidoctorTask by registering(AsciidoctorTask::class) {
         dependsOn(test)
+        attributes(mapOf("doctype" to "book"))
+        inputs.dir(snippetsDir)
     }
-    build {
-        dependsOn(asciidoctor)
+    val copyDocument by registering(Copy::class) {
+        dependsOn(asciidoctorTask)
+        from(asciidoctorTask.get().outputs.files.singleFile)
+        into("src/main/resources/static/docs")
+    }
+    bootJar {
+        dependsOn(copyDocument)
     }
 }
 
