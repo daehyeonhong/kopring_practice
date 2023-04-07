@@ -3,10 +3,9 @@ package com.practice.kopring.common.exception.handler
 import com.practice.kopring.common.dto.ErrorDto
 import com.practice.kopring.common.enumerate.ErrorMessage
 import com.practice.kopring.common.exception.BusinessException
-import com.practice.kopring.common.logger
 import jakarta.servlet.http.HttpServletRequest
 import java.util.*
-import org.slf4j.Logger
+import org.apache.logging.log4j.kotlin.Logging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.web.firewall.RequestRejectedException
@@ -16,23 +15,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
 
 @RestControllerAdvice
 class GlobalExceptionHandler {
-    companion object {
-        private val logger: Logger = this.logger()
-    }
+    companion object : Logging
 
     @ExceptionHandler(value = [BusinessException::class])
     protected fun handlerBusinessException(
         exception: BusinessException,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<ErrorDto> {
-        logger.error(exception.javaClass.name, exception)
+        logger.error {
+            exception.javaClass.name
+            exception
+        }
         val errorMessage: ErrorMessage = exception.errorMessage
-        return ResponseEntity
-            .status(errorMessage.status)
-            .body(
+        return ResponseEntity.status(errorMessage.status).body(
                 ErrorDto(
-                    errorMessage.name,
-                    errorMessage.description
+                    errorMessage.name, errorMessage.description
                 )
             )
     }
@@ -40,16 +37,17 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = [MethodArgumentNotValidException::class])
     protected fun handleMethodArgumentNotValidException(
         exception: MethodArgumentNotValidException,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<ErrorDto> {
-        logger.error(exception.javaClass.name, exception.bindingResult)
-        logger.error("requestUrl: {}", request.requestURL)
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(
+        logger.error {
+            exception.javaClass.name
+            exception.bindingResult
+            "requestUrl: ${request.requestURL}"
+        }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ErrorDto(
-                    "MethodArgumentNotValidException",
-                    exception.message
+                    "MethodArgumentNotValidException", exception.message
                 )
             )
     }
@@ -57,7 +55,7 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = [RequestRejectedException::class])
     protected fun handleRequestRejectedException(
         exception: RequestRejectedException,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<ErrorDto> {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
@@ -72,12 +70,13 @@ class GlobalExceptionHandler {
     @ExceptionHandler(value = [Exception::class])
     protected fun handleException(
         exception: Exception,
-        request: HttpServletRequest
+        request: HttpServletRequest,
     ): ResponseEntity<ErrorDto> {
-        logger.error(exception.javaClass.name, exception)
-        return ResponseEntity
-            .status(HttpStatus.BAD_REQUEST)
-            .body(
+        logger.error {
+            exception.javaClass.name
+            exception
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                 ErrorDto(
                     exception.message as String,
                     "${exception.cause.toString()}\n${exception.localizedMessage}${Arrays.toString(exception.stackTrace)}"

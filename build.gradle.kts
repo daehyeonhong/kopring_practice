@@ -73,6 +73,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.data:spring-data-rest-hal-explorer")
     implementation("org.springframework.boot:spring-boot-starter-log4j2")
+    implementation("org.apache.logging.log4j:log4j-api-kotlin:1.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
     implementation("com.auth0:java-jwt:4.3.0")
@@ -143,7 +144,6 @@ tasks.jacocoTestCoverageVerification {
                 value = "TOTALCOUNT"
                 maximum = "200".toBigDecimal()
             }
-
         }
     }
 }
