@@ -3,10 +3,10 @@ package com.practice.kopring.auth.presentation
 import RestAssuredTestBase
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.auth.enumerate.Token
-import com.practice.kopring.common.logger
 import com.practice.kopring.user.enumerate.Role
 import io.restassured.RestAssured
 import org.apache.http.HttpStatus
+import org.apache.logging.log4j.kotlin.Logging
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,7 +18,7 @@ import org.springframework.restdocs.restassured.RestAssuredRestDocumentation
 class AuthControllerRestAssuredTests(
     @LocalServerPort private val port: Int,
     @Autowired private var jwtTokenProvider: JwtTokenProvider,
-    @Value("\${user_id.key}") private val userId: String
+    @Value("\${user_id.key}") private val userId: String,
 ) : RestAssuredTestBase(port) {
     @Disabled
     @Test
@@ -33,11 +33,14 @@ class AuthControllerRestAssuredTests(
             )
     }
 
+    companion object : Logging
+
     @Disabled
     @Test
     fun logout(): Unit {
         val accessToken: String = this.jwtTokenProvider.createAccessToken(this.userId, Role.USER)
-        logger().info("${Token.ACCESS_TOKEN.name}: {}", accessToken)
+        logger.info("${Token.ACCESS_TOKEN.name}: ${accessToken}")
+
         val response = RestAssured.given(spec).log().all()
             .`when`().filter(
                 RestAssuredRestDocumentation.document(
