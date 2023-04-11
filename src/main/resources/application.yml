@@ -4,12 +4,12 @@ spring:
       enabled: always
   profiles:
     active:
-      - loc
+      - local
     group:
-      loc:
-        - oauth-loc
-        - database-loc
-        - security-loc
+      local:
+        - oauth-local
+        - database-local
+        - security-local
       dev:
         - oauth-dev
         - database-dev

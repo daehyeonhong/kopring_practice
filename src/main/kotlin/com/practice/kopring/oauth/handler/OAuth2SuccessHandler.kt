@@ -24,13 +24,13 @@ class OAuth2SuccessHandler(
     private val userService: UserService,
     private val oAuth2UserService: CustomOAuth2UserService,
     private val userRedisCacheService: UserRedisCacheService,
-    private val jwtTokenProvider: JwtTokenProvider
+    private val jwtTokenProvider: JwtTokenProvider,
 ) : SimpleUrlAuthenticationSuccessHandler() {
 
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authentication: Authentication?
+        authentication: Authentication?,
     ) {
         val oAuth2User: OAuth2User = authentication?.principal as OAuth2User
 

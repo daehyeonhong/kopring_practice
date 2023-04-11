@@ -2,6 +2,7 @@ package com.practice.kopring.auth.application
 
 import com.practice.kopring.auth.dto.JwtTokenResponse
 import com.practice.kopring.auth.dto.RefreshToken
+import com.practice.kopring.auth.enumerate.Token
 import com.practice.kopring.common.exception.auth.TokenExpiredException
 import com.practice.kopring.common.exception.auth.TokenInvalidException
 import com.practice.kopring.common.exception.user.NotExistsUserException
@@ -17,7 +18,7 @@ import org.springframework.transaction.annotation.Transactional
 class AuthService(
     private val jwtTokenProvider: JwtTokenProvider,
     private val userRepository: UserRepository,
-    private val userRedisCacheService: UserRedisCacheService
+    private val userRedisCacheService: UserRedisCacheService,
 ) {
     fun refresh(refreshToken: String?): JwtTokenResponse {
         val userId: String? = this.jwtTokenProvider.getUserId(refreshToken)
@@ -47,10 +48,19 @@ class AuthService(
 
     @Transactional
     fun revokeToken(accessToken: String): Unit {
-        val access: String? = this.jwtTokenProvider.resolveToken(accessToken)
+        val access: String? = this.resolveToken(accessToken)
         if (!jwtTokenProvider.validate(access)) throw TokenInvalidException()
         val userId: String = this.jwtTokenProvider.getUserId(access) ?: throw NotExistsUserException()
         if (!this.userRepository.existsById(UUID.fromString(userId))) throw NotExistsUserException()
         this.userRedisCacheService.getWithUserId(userId)?.let { this.userRedisCacheService.delete(it) }
+    }
+
+    private fun resolveToken(bearerToken: String?): String? {
+        return when {
+            !bearerToken.isNullOrBlank() && bearerToken.startsWith(Token.BEARER_PREFIX.value) ->
+                bearerToken.replace(Token.BEARER_PREFIX.value, "")
+
+            else -> null
+        }
     }
 }

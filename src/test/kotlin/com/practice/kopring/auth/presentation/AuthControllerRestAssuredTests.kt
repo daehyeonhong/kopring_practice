@@ -17,7 +17,7 @@ import org.springframework.restdocs.restassured.RestAssuredRestDocumentation
 
 class AuthControllerRestAssuredTests(
     @LocalServerPort private val port: Int,
-    @Autowired private var jwtTokenProvider: JwtTokenProvider,
+    @Autowired private var auth0JwtTokenProvider: JwtTokenProvider,
     @Value("\${user_id.key}") private val userId: String,
 ) : RestAssuredTestBase(port) {
     @Disabled
@@ -38,7 +38,7 @@ class AuthControllerRestAssuredTests(
     @Disabled
     @Test
     fun logout(): Unit {
-        val accessToken: String = this.jwtTokenProvider.createAccessToken(this.userId, Role.USER)
+        val accessToken: String = this.auth0JwtTokenProvider.createAccessToken(this.userId, Role.USER)
         logger.info("${Token.ACCESS_TOKEN.name}: ${accessToken}")
 
         val response = RestAssured.given(spec).log().all()
@@ -60,7 +60,7 @@ class AuthControllerRestAssuredTests(
     @Disabled
     @Test
     fun refresh(): Unit {
-        val refreshToken: String = this.jwtTokenProvider.createRefreshToken(this.userId)
+        val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken(this.userId)
         val response = RestAssured.given(spec).log().all()
             .`when`().filter(
                 RestAssuredRestDocumentation.document(
