@@ -14,6 +14,6 @@ abstract class BusinessException : RuntimeException {
     }
 
     constructor() : super() {
-        this.errorMessage = ErrorMessage.CONFLICT_ERROR
+        this.errorMessage = ErrorMessage.INTERNAL_SERVER_ERROR
     }
 }
