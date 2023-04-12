@@ -2,9 +2,8 @@ package com.practice.kopring.auth.application
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import com.auth0.jwt.exceptions.JWTDecodeException
 import com.auth0.jwt.interfaces.DecodedJWT
-import com.practice.kopring.common.exception.user.NotExistsUserException
+import com.practice.kopring.common.exception.auth.TokenInvalidException
 import com.practice.kopring.user.enumerate.Role
 import java.util.*
 import org.apache.logging.log4j.kotlin.Logging
@@ -26,42 +25,41 @@ class Auth0JwtTokenProvider(
 
     private val algorithm: Algorithm = Algorithm.HMAC512(this.secretKey)
 
-    override fun createAccessToken(id: String, role: Role): String {
-        return JWT.create()
-            .withSubject(id)
-            .withIssuer(this.issuer)
-            .withClaim("role", role.key)
-            .withIssuedAt(Date(System.currentTimeMillis()))
-            .withExpiresAt(Date(System.currentTimeMillis() + this.accessTokenExpiredTime))
-            .sign(this.algorithm)
+    override fun createAccessToken(id: String, role: Role): String = JWT.create()
+        .withSubject(id)
+        .withIssuer(this.issuer)
+        .withClaim("role", role.key)
+        .withIssuedAt(Date(System.currentTimeMillis()))
+        .withExpiresAt(Date(System.currentTimeMillis() + this.accessTokenExpiredTime))
+        .sign(this.algorithm)
+
+    override fun createRefreshToken(id: String): String = JWT.create()
+        .withSubject(id)
+        .withIssuer(this.issuer)
+        .withIssuedAt(Date(System.currentTimeMillis()))
+        .withExpiresAt(Date(System.currentTimeMillis() + this.refreshTokenExpiredTime))
+        .sign(this.algorithm)
+
+    override fun validate(token: String?): Boolean = this.decodedJWT(token).expiresAt.after(Date())
+
+    override fun getSubject(token: String?): String {
+        return decodedJWT(token).subject.ifBlank { throw TokenInvalidException() }
     }
 
-    override fun createRefreshToken(id: String): String {
-        return JWT.create()
-            .withSubject(id)
-            .withIssuer(this.issuer)
-            .withIssuedAt(Date(System.currentTimeMillis()))
-            .withExpiresAt(Date(System.currentTimeMillis() + this.refreshTokenExpiredTime))
-            .sign(this.algorithm)
-    }
-
-    override fun validate(token: String?): Boolean = this.decodedJWT(token).expiresAt?.after(Date()) ?: false
-    override fun getSubject(token: String?): String = this.decodedJWT(token).subject ?: throw NotExistsUserException()
     override fun refreshTokenExpireTime(): Long = this.refreshTokenExpiredTime
+
     override fun getAuthentication(token: String): Authentication = UsernamePasswordAuthenticationToken(
         this.getSubject(token), null, this.getAuthorities(token)
     )
 
-    private fun getAuthorities(token: String): Collection<GrantedAuthority> {
-        val jwt: DecodedJWT = this.decodedJWT(token)
-        return setOf(SimpleGrantedAuthority(Role.of(jwt.claims?.get("role").toString()).key))
-    }
-
     override fun getExpiration(token: String?): Long =
-        decodedJWT(token).expiresAt?.let { it.time - System.currentTimeMillis() } ?: -1L
+        this.decodedJWT(token).expiresAt.time - System.currentTimeMillis()
 
-    override fun getRole(token: String?): Role = Role.of(decodedJWT(token).getClaim("role")?.asString())
+    override fun getRole(token: String?): Role = Role.of(this.decodedJWT(token).getClaim("role").asString())
+
+    private fun getAuthorities(token: String): Collection<GrantedAuthority> =
+        setOf(SimpleGrantedAuthority(this.getRole(token).key))
 
     private fun decodedJWT(token: String?): DecodedJWT =
-        JWT.require(this.algorithm).build().verify(token) ?: throw JWTDecodeException("Invalid token")
+        JWT.require(this.algorithm).build().verify(token)
 }

@@ -1,6 +1,8 @@
 package com.practice.kopring.auth.application
 
-import com.practice.kopring.common.exception.user.InvalidUserRoleException
+import com.auth0.jwt.exceptions.JWTDecodeException
+import com.auth0.jwt.exceptions.TokenExpiredException
+import com.practice.kopring.common.exception.auth.TokenInvalidException
 import com.practice.kopring.user.enumerate.Role
 import org.apache.logging.log4j.kotlin.Logging
 import org.assertj.core.api.Assertions
@@ -11,35 +13,39 @@ class JwtTokenProviderTests {
 
     private val accessTokenExpiredTime: Long = 1500
     private val refreshTokenExpiredTime: Long = 3000
-    private val auth0JwtTokenProvider: Auth0JwtTokenProvider = Auth0JwtTokenProvider(
-        "qqweqwewqewe", "hahaha",
-        accessTokenExpiredTime, refreshTokenExpiredTime
-    )
+    private val secretKey: String = "qqweqwewqewe"
+    private val issuer: String = "hahaha"
+    private val validAuth0JwtTokenProvider: Auth0JwtTokenProvider =
+        Auth0JwtTokenProvider(
+            secretKey, issuer, accessTokenExpiredTime, refreshTokenExpiredTime
+        )
+    private val invalidAuth0JwtTokenProvider: Auth0JwtTokenProvider =
+        Auth0JwtTokenProvider(this.secretKey, this.issuer, 0, 0)
 
     @Test
     fun `create Access token`() {
-        val accessToken: String = this.auth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
+        val accessToken: String = this.validAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
         logger.info { "accessToken: ${accessToken}" }
         Assertions.assertThat(accessToken).isNotNull()
-        val validate: Boolean = this.auth0JwtTokenProvider.validate(accessToken)
+        val validate: Boolean = this.validAuth0JwtTokenProvider.validate(accessToken)
         logger.info { "validate: ${validate}" }
         Assertions.assertThat(validate).isTrue()
     }
 
     @Test
     fun `create Refresh token`() {
-        val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken("PAYLOAD")
+        val refreshToken: String = this.validAuth0JwtTokenProvider.createRefreshToken("PAYLOAD")
         logger.info { "refreshToken: ${refreshToken}" }
         Assertions.assertThat(refreshToken).isNotNull()
-        val validate: Boolean = this.auth0JwtTokenProvider.validate(refreshToken)
+        val validate: Boolean = this.validAuth0JwtTokenProvider.validate(refreshToken)
         logger.info { "validate: ${validate}" }
         Assertions.assertThat(validate).isTrue()
     }
 
     @Test
     fun `token authentication test`() {
-        val accessToken: String = this.auth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
-        val authentication: Role = this.auth0JwtTokenProvider.getRole(accessToken)
+        val accessToken: String = this.validAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
+        val authentication: Role = this.validAuth0JwtTokenProvider.getRole(accessToken)
         logger.info { "authentication: ${authentication.key}" }
         Assertions.assertThat(authentication.key)
             .isEqualTo(Role.USER.key)
@@ -48,20 +54,70 @@ class JwtTokenProviderTests {
     @Test
     fun `token authentication null test`() {
         Assertions.assertThatThrownBy {
-            this.auth0JwtTokenProvider.getRole("asdsd")
-        }.isInstanceOf(InvalidUserRoleException::class.java)
+            this.validAuth0JwtTokenProvider.getRole("asdsd")
+        }.isInstanceOf(JWTDecodeException::class.java)
     }
 
     @Test
     fun `token authentication expired test`() {
-        val accessToken: String = this.auth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
-        val expiration: Long = this.auth0JwtTokenProvider.getExpiration(accessToken)
+        val accessToken: String = this.validAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
+        val expiration: Long = this.validAuth0JwtTokenProvider.getExpiration(accessToken)
         Assertions.assertThat(expiration).isGreaterThan(this.accessTokenExpiredTime - 1000)
     }
 
     @Test
-    fun `token authentication expired null test`() {
-        val expiration: Long = this.auth0JwtTokenProvider.getExpiration("asdsd")
-        Assertions.assertThat(expiration).isEqualTo(-1L)
+    fun `token authentication expired Exception test`() {
+        val accessToken: String = this.invalidAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
+        Assertions.assertThatThrownBy {
+            this.validAuth0JwtTokenProvider.getExpiration(accessToken)
+        }.isInstanceOf(TokenExpiredException::class.java)
+    }
+
+    @Test
+    fun `token authentication validate Exception test`() {
+        val accessToken: String = this.invalidAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
+        Assertions.assertThatThrownBy {
+            this.validAuth0JwtTokenProvider.validate(accessToken)
+        }.isInstanceOf(TokenExpiredException::class.java)
+    }
+
+    @Test
+    fun `token subject test`() {
+        val accessToken: String = this.validAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
+
+        this.validAuth0JwtTokenProvider.getSubject(accessToken)
+
+        Assertions.assertThat(this.validAuth0JwtTokenProvider.getSubject(accessToken))
+            .isEqualTo("PAYLOAD")
+    }
+
+    @Test
+    fun `token emptySubject test`() {
+        val accessToken: String = this.validAuth0JwtTokenProvider.createAccessToken("", Role.USER)
+        Assertions.assertThatThrownBy {
+            this.validAuth0JwtTokenProvider.getSubject(accessToken)
+        }.isInstanceOf(TokenInvalidException::class.java)
+    }
+
+    @Test
+    fun `refreshTokenExpiredTime Test`() {
+        Assertions.assertThat(this.validAuth0JwtTokenProvider.refreshTokenExpireTime())
+            .isEqualTo(this.refreshTokenExpiredTime)
+    }
+
+    @Test
+    fun `getAuthentication Test`() {
+        val accessToken: String = this.validAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
+        val authentication = this.validAuth0JwtTokenProvider.getAuthentication(accessToken)
+        logger.info { "authentication: ${authentication}" }
+        Assertions.assertThat(authentication).isNotNull()
+    }
+
+    @Test
+    fun `getAuthentication Exception Test`() {
+        val accessToken: String = this.validAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
+        val authentication = this.validAuth0JwtTokenProvider.getAuthentication(accessToken)
+        logger.info { "authentication: ${authentication}" }
+        Assertions.assertThat(authentication).isNotNull()
     }
 }
