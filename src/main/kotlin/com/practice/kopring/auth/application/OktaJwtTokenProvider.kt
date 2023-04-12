@@ -1,7 +1,6 @@
 package com.practice.kopring.auth.application
 
-import com.practice.kopring.common.exception.auth.TokenExpiredException
-import com.practice.kopring.common.exception.user.NotExistsUserException
+import com.practice.kopring.common.exception.auth.TokenInvalidException
 import com.practice.kopring.user.enumerate.Role
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
@@ -12,7 +11,10 @@ import java.util.*
 import javax.crypto.SecretKey
 import org.apache.logging.log4j.kotlin.Logging
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
+import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 class OktaJwtTokenProvider(
     @Value("\${jwt.secret}") private val secret: String,
@@ -34,10 +36,6 @@ class OktaJwtTokenProvider(
         .signWith(this.secretKey)
         .compact()
 
-    override fun getAuthentication(token: String): Authentication {
-        TODO("Not yet implemented")
-    }
-
     override fun createRefreshToken(id: String): String = Jwts.builder()
         .setIssuer(this.issuer)
         .setSubject(id)
@@ -46,17 +44,19 @@ class OktaJwtTokenProvider(
         .signWith(this.secretKey)
         .compact()
 
-    override fun validate(token: String?): Boolean = this.verifyToken(token)?.expiration?.before(Date()) ?: false
-
-    override fun getSubject(token: String?): String = this.verifyToken(token)?.subject ?: throw NotExistsUserException()
+    override fun validate(token: String?): Boolean = this.verifyToken(token).expiration.before(Date())
+    override fun getSubject(token: String?): String = this.verifyToken(token).subject
     override fun refreshTokenExpireTime(): Long = this.refreshTokenExpiredTime
+    override fun getExpiration(token: String?): Long = this.verifyToken(token).expiration.time
+    override fun getRole(token: String?): Role = Role.of(this.verifyToken(token).role)
+    override fun getAuthentication(token: String): Authentication = UsernamePasswordAuthenticationToken(
+        this.getSubject(token), null, this.getAuthorities(token)
+    )
 
-    override fun getExpiration(token: String?): Long =
-        this.verifyToken(token)?.expiration?.time ?: throw TokenExpiredException()
+    private fun getAuthorities(token: String): Collection<GrantedAuthority> =
+        setOf(SimpleGrantedAuthority(this.getRole(token).key))
 
-    override fun getRole(token: String?): Role = Role.of(this.verifyToken(token)?.role)
-
-    private fun verifyToken(token: String?): JwtTokenDto? = try {
+    private fun verifyToken(token: String?): JwtTokenDto = try {
         JwtTokenDto.fromClaims(
             Jwts.parserBuilder()
                 .setSigningKey(secretKey)
@@ -65,7 +65,7 @@ class OktaJwtTokenProvider(
         )
     } catch (jwtException: JwtException) {
         logger.error { jwtException.message }
-        null
+        throw TokenInvalidException()
     }
 
     data class JwtTokenDto(

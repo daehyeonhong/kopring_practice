@@ -45,27 +45,23 @@ class Auth0JwtTokenProvider(
             .sign(this.algorithm)
     }
 
-    override fun validate(token: String?): Boolean = this.decodedJWT(token)?.expiresAt?.after(Date()) ?: false
-    override fun getSubject(token: String?): String = this.decodedJWT(token)?.subject ?: throw NotExistsUserException()
+    override fun validate(token: String?): Boolean = this.decodedJWT(token).expiresAt?.after(Date()) ?: false
+    override fun getSubject(token: String?): String = this.decodedJWT(token).subject ?: throw NotExistsUserException()
     override fun refreshTokenExpireTime(): Long = this.refreshTokenExpiredTime
     override fun getAuthentication(token: String): Authentication = UsernamePasswordAuthenticationToken(
         this.getSubject(token), null, this.getAuthorities(token)
     )
 
     private fun getAuthorities(token: String): Collection<GrantedAuthority> {
-        val jwt: DecodedJWT? = this.decodedJWT(token)
-        return setOf(SimpleGrantedAuthority(Role.of(jwt?.claims?.get("role").toString()).key))
+        val jwt: DecodedJWT = this.decodedJWT(token)
+        return setOf(SimpleGrantedAuthority(Role.of(jwt.claims?.get("role").toString()).key))
     }
 
     override fun getExpiration(token: String?): Long =
-        decodedJWT(token)?.expiresAt?.let { it.time - System.currentTimeMillis() } ?: -1L
+        decodedJWT(token).expiresAt?.let { it.time - System.currentTimeMillis() } ?: -1L
 
-    override fun getRole(token: String?): Role = Role.of(decodedJWT(token)?.getClaim("role")?.asString())
+    override fun getRole(token: String?): Role = Role.of(decodedJWT(token).getClaim("role")?.asString())
 
-    private fun decodedJWT(token: String?): DecodedJWT? = try {
-        JWT.require(this.algorithm).build().verify(token)
-    } catch (jwtDecodeException: JWTDecodeException) {
-        logger.error { "JWTDecodeException: ${jwtDecodeException.message}" }
-        null
-    }
+    private fun decodedJWT(token: String?): DecodedJWT =
+        JWT.require(this.algorithm).build().verify(token) ?: throw JWTDecodeException("Invalid token")
 }
