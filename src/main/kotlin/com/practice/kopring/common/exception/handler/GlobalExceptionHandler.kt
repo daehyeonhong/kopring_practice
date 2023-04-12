@@ -28,10 +28,10 @@ class GlobalExceptionHandler {
         }
         val errorMessage: ErrorMessage = exception.errorMessage
         return ResponseEntity.status(errorMessage.status).body(
-                ErrorDto(
-                    errorMessage.name, errorMessage.description
-                )
+            ErrorDto(
+                errorMessage.name, errorMessage.description
             )
+        )
     }
 
     @ExceptionHandler(value = [MethodArgumentNotValidException::class])
@@ -46,10 +46,10 @@ class GlobalExceptionHandler {
         }
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ErrorDto(
-                    "MethodArgumentNotValidException", exception.message
-                )
+            ErrorDto(
+                "MethodArgumentNotValidException", exception.message
             )
+        )
     }
 
     @ExceptionHandler(value = [RequestRejectedException::class])
@@ -77,10 +77,10 @@ class GlobalExceptionHandler {
             exception
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
-                ErrorDto(
-                    exception.message as String,
-                    "${exception.cause.toString()}\n${exception.localizedMessage}${Arrays.toString(exception.stackTrace)}"
-                )
+            ErrorDto(
+                exception.message as String,
+                "${exception.cause.toString()}\n${exception.localizedMessage}${Arrays.toString(exception.stackTrace)}"
             )
+        )
     }
 }
