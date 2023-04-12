@@ -3,6 +3,7 @@ package com.practice.kopring.auth.application
 import com.practice.kopring.user.enumerate.Role
 import java.util.*
 import org.apache.logging.log4j.kotlin.Logging
+import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
@@ -17,20 +18,20 @@ class JwtTokenTests {
     fun `create Access token`() {
         val accessToken: String = this.auth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
         logger.info { "accessToken: ${accessToken}" }
-        org.assertj.core.api.Assertions.assertThat(accessToken).isNotNull()
+        Assertions.assertThat(accessToken).isNotNull()
         val validate: Boolean = this.auth0JwtTokenProvider.validate(accessToken)
         logger.info { "validate: ${validate}" }
-        org.assertj.core.api.Assertions.assertThat(validate).isTrue()
+        Assertions.assertThat(validate).isTrue()
     }
 
     @Test
     fun `create Refresh token`() {
         val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken("PAYLOAD")
         logger.info { "refreshToken: ${refreshToken}" }
-        org.assertj.core.api.Assertions.assertThat(refreshToken).isNotNull()
+        Assertions.assertThat(refreshToken).isNotNull()
         val validate: Boolean = this.auth0JwtTokenProvider.validate(refreshToken)
         logger.info { "validate: ${validate}" }
-        org.assertj.core.api.Assertions.assertThat(validate).isTrue()
+        Assertions.assertThat(validate).isTrue()
     }
 
     @Test
@@ -41,7 +42,7 @@ class JwtTokenTests {
         val comepare: UsernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
             "PAYLOAD", null, Collections.singletonList(SimpleGrantedAuthority("\"${Role.USER.key}\""))
         )
-        org.assertj.core.api.Assertions.assertThat(authentication.authorities.first().authority)
+        Assertions.assertThat(authentication.authorities.first().authority)
             .isEqualTo(comepare.authorities.first().authority)
     }
 
@@ -49,14 +50,25 @@ class JwtTokenTests {
     fun `token authentication null test`() {
         val authentication: Authentication = this.auth0JwtTokenProvider.getAuthentication("asdsd")
         logger.info { "authentication: ${authentication.authorities.first().authority}" }
-        org.assertj.core.api.Assertions.assertThat(authentication.authorities.first().authority).isEqualTo("null")
+        Assertions.assertThat(authentication.authorities.first().authority).isEqualTo("null")
     }
 
     @Test
     fun `token authentication expired test`() {
         val accessToken: String = this.auth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
         val expiration: Long = this.auth0JwtTokenProvider.getExpiration(accessToken)
-        org.assertj.core.api.Assertions.assertThat(expiration).isGreaterThan(0)
+        Assertions.assertThat(expiration).isGreaterThan(24 * 60 * 60 * 1000L - 1000)
+    }
+
+    @Test
+    fun `token authentication expired null test`() {
+        val expiration: Long = this.auth0JwtTokenProvider.getExpiration("asdsd")
+        Assertions.assertThat(expiration).isEqualTo(-1L)
+    }
+
+    @Test
+    fun `token refresh expireTime test`() {
+        Assertions.assertThat(this.auth0JwtTokenProvider.refreshTokenExpireTime()).isEqualTo(7 * 24 * 60 * 60 * 1000L)
     }
 
 }
