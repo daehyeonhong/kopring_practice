@@ -1,18 +1,20 @@
 package com.practice.kopring.auth.application
 
+import com.practice.kopring.common.exception.user.InvalidUserRoleException
 import com.practice.kopring.user.enumerate.Role
-import java.util.*
 import org.apache.logging.log4j.kotlin.Logging
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
-import org.springframework.security.core.Authentication
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 
-class JwtTokenTests {
+class JwtTokenProviderTests {
     companion object : Logging
 
-    private val auth0JwtTokenProvider: Auth0JwtTokenProvider = Auth0JwtTokenProvider("qqweqwewqewe", "hahaha")
+    private val accessTokenExpiredTime: Long = 1500
+    private val refreshTokenExpiredTime: Long = 3000
+    private val auth0JwtTokenProvider: Auth0JwtTokenProvider = Auth0JwtTokenProvider(
+        "qqweqwewqewe", "hahaha",
+        accessTokenExpiredTime, refreshTokenExpiredTime
+    )
 
     @Test
     fun `create Access token`() {
@@ -37,27 +39,24 @@ class JwtTokenTests {
     @Test
     fun `token authentication test`() {
         val accessToken: String = this.auth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
-        val authentication: Authentication = this.auth0JwtTokenProvider.getAuthentication(accessToken)
-        logger.info { "authentication: ${authentication.authorities.first().authority}" }
-        val comepare: UsernamePasswordAuthenticationToken = UsernamePasswordAuthenticationToken(
-            "PAYLOAD", null, Collections.singletonList(SimpleGrantedAuthority("\"${Role.USER.key}\""))
-        )
-        Assertions.assertThat(authentication.authorities.first().authority)
-            .isEqualTo(comepare.authorities.first().authority)
+        val authentication: Role = this.auth0JwtTokenProvider.getRole(accessToken)
+        logger.info { "authentication: ${authentication.key}" }
+        Assertions.assertThat(authentication.key)
+            .isEqualTo(Role.USER.key)
     }
 
     @Test
     fun `token authentication null test`() {
-        val authentication: Authentication = this.auth0JwtTokenProvider.getAuthentication("asdsd")
-        logger.info { "authentication: ${authentication.authorities.first().authority}" }
-        Assertions.assertThat(authentication.authorities.first().authority).isEqualTo("null")
+        Assertions.assertThatThrownBy {
+            this.auth0JwtTokenProvider.getRole("asdsd")
+        }.isInstanceOf(InvalidUserRoleException::class.java)
     }
 
     @Test
     fun `token authentication expired test`() {
         val accessToken: String = this.auth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
         val expiration: Long = this.auth0JwtTokenProvider.getExpiration(accessToken)
-        Assertions.assertThat(expiration).isGreaterThan(24 * 60 * 60 * 1000L - 1000)
+        Assertions.assertThat(expiration).isGreaterThan(this.accessTokenExpiredTime - 1000)
     }
 
     @Test
@@ -65,10 +64,4 @@ class JwtTokenTests {
         val expiration: Long = this.auth0JwtTokenProvider.getExpiration("asdsd")
         Assertions.assertThat(expiration).isEqualTo(-1L)
     }
-
-    @Test
-    fun `token refresh expireTime test`() {
-        Assertions.assertThat(this.auth0JwtTokenProvider.refreshTokenExpireTime()).isEqualTo(7 * 24 * 60 * 60 * 1000L)
-    }
-
 }

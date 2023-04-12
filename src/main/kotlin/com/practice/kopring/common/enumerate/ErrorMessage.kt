@@ -26,8 +26,9 @@ enum class ErrorMessage(
      * OAuth Error Code
      */
     NOT_EXISTS_OAUTH_INFO(status = NOT_FOUND, description = "존재하지 않는 OAUTH 계정입니다."),
-    EXPIRED_TOKEN(status = UNAUTHORIZED, description = "해당 토큰은 만료된 토큰입니다."),
-    INVALID_TOKEN(status = UNAUTHORIZED, description = "유효하지 않은 토큰입니다."),
+    TOKEN_EXPIRED(status = UNAUTHORIZED, description = "해당 토큰은 만료된 토큰입니다."),
+    TOKEN_INVALID(status = UNAUTHORIZED, description = "유효하지 않은 토큰입니다."),
+    TOKEN_PROCESS_EXCEPTION(status = UNAUTHORIZED, description = "유효하지 않은 토큰입니다."),
     INVALID_PROVIDER_EMAIL(status = CONFLICT, description = "해당 E-Mail 계정은 다른 서비스를 통해 가입한 상태입니다."),
     INVALID_PROVIDER(status = BAD_REQUEST, description = "지원하지 않는 OAuth2 서비스 제공자입니다."),
 }

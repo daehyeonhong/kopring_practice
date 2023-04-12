@@ -21,8 +21,7 @@ class AuthService(
     private val userRedisCacheService: UserRedisCacheService,
 ) {
     fun refresh(refreshToken: String?): JwtTokenResponse {
-        val userId: String? = this.jwtTokenProvider.getUserId(refreshToken)
-        if (userId.isNullOrBlank()) throw NotExistsUserException()
+        val userId: String = this.jwtTokenProvider.getSubject(refreshToken)
 
         val user: UserEntity = this.userRepository.findByIdOrNull(UUID.fromString(userId))
             ?: throw NotExistsUserException()
@@ -50,7 +49,7 @@ class AuthService(
     fun revokeToken(accessToken: String): Unit {
         val access: String? = this.resolveToken(accessToken)
         if (!jwtTokenProvider.validate(access)) throw TokenInvalidException()
-        val userId: String = this.jwtTokenProvider.getUserId(access) ?: throw NotExistsUserException()
+        val userId: String = this.jwtTokenProvider.getSubject(access)
         if (!this.userRepository.existsById(UUID.fromString(userId))) throw NotExistsUserException()
         this.userRedisCacheService.getWithUserId(userId)?.let { this.userRedisCacheService.delete(it) }
     }

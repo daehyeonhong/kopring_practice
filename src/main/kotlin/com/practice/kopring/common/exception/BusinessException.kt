@@ -13,7 +13,7 @@ abstract class BusinessException : RuntimeException {
         this.errorMessage = errorMessage
     }
 
-    constructor(reason: String) : super(reason) {
+    constructor() : super() {
         this.errorMessage = ErrorMessage.CONFLICT_ERROR
     }
 }

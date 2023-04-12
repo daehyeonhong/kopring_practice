@@ -1,5 +1,8 @@
 package com.practice.kopring.auth.application
 
+import com.practice.kopring.common.exception.auth.TokenExpiredException
+import com.practice.kopring.common.exception.user.NotExistsUserException
+import com.practice.kopring.user.enumerate.Role
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
 import io.jsonwebtoken.JwtException
@@ -9,64 +12,73 @@ import java.util.*
 import javax.crypto.SecretKey
 import org.apache.logging.log4j.kotlin.Logging
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.security.core.GrantedAuthority
+import org.springframework.security.core.Authentication
 
 class OktaJwtTokenProvider(
     @Value("\${jwt.secret}") private val secret: String,
-    @Value("\${jwt.secret}") private val issuer: String,
-) {
-    companion object : Logging {
-        private const val DAY: Long = 24 * 60 * 60 * 1_000L
-        private const val WEEK: Long = 7 * DAY
-        private const val ACCESS_TOKEN_EXPIRED_TIME: Long = 1 * DAY
-        private const val REFRESH_TOKEN_EXPIRED_WEEK: Long = 1 * WEEK
-    }
+    @Value("\${jwt.issuer}") private val issuer: String,
+    @Value("\${jwt.access_token}") private val accessTokenExpiredTime: Long,
+    @Value("\${jwt.refresh_token}") private val refreshTokenExpiredTime: Long,
+) : JwtTokenProvider {
+    companion object : Logging;
 
     private val secretKey: SecretKey =
         Keys.hmacShaKeyFor(Base64.getEncoder().encodeToString(this.secret.toByteArray()).toByteArray())
 
-    fun createAccessToken(id: String, roles: Collection<GrantedAuthority>): String {
-        val claims: Claims = Jwts.claims().let {
-            it.issuer = this.issuer
-            it.subject = id
-            it.issuedAt = Date(System.currentTimeMillis())
-            it.expiration = Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRED_TIME)
-            it["roles"] = roles
-            it
-        }
+    override fun createAccessToken(id: String, role: Role): String = Jwts.builder()
+        .setIssuer(this.issuer)
+        .setSubject(id)
+        .setIssuedAt(Date(System.currentTimeMillis()))
+        .setExpiration(Date(System.currentTimeMillis() + this.accessTokenExpiredTime))
+        .claim("role", role)
+        .signWith(this.secretKey)
+        .compact()
 
-        return Jwts.builder()
-            .setClaims(claims)
-            .signWith(this.secretKey)
-            .compact()
+    override fun getAuthentication(token: String): Authentication {
+        TODO("Not yet implemented")
     }
 
-    fun createRefreshToken(id: String): String {
-        val claims: Claims = Jwts.claims().let {
-            it.issuer = this.issuer
-            it.subject = id
-            it
-        }
+    override fun createRefreshToken(id: String): String = Jwts.builder()
+        .setIssuer(this.issuer)
+        .setSubject(id)
+        .setIssuedAt(Date(System.currentTimeMillis()))
+        .setExpiration(Date(System.currentTimeMillis() + this.refreshTokenExpiredTime))
+        .signWith(this.secretKey)
+        .compact()
 
-        return Jwts.builder()
-            .setClaims(claims)
-            .setIssuedAt(Date(System.currentTimeMillis()))
-            .setExpiration(Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRED_WEEK))
-            .signWith(this.secretKey)
-            .compact()
-    }
+    override fun validate(token: String?): Boolean = this.verifyToken(token)?.expiration?.before(Date()) ?: false
 
-    fun isValidateToken(token: String?): Boolean {
-        return try {
-            val claims: Jws<Claims> = Jwts.parserBuilder()
-                .setSigningKey(this.secretKey)
+    override fun getSubject(token: String?): String = this.verifyToken(token)?.subject ?: throw NotExistsUserException()
+    override fun refreshTokenExpireTime(): Long = this.refreshTokenExpiredTime
+
+    override fun getExpiration(token: String?): Long =
+        this.verifyToken(token)?.expiration?.time ?: throw TokenExpiredException()
+
+    override fun getRole(token: String?): Role = Role.of(this.verifyToken(token)?.role)
+
+    private fun verifyToken(token: String?): JwtTokenDto? = try {
+        JwtTokenDto.fromClaims(
+            Jwts.parserBuilder()
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
-            !claims.body.expiration.before(Date())
-        } catch (jwtException: JwtException) {
-            logger.error { jwtException.message }
-            false
-        }
+        )
+    } catch (jwtException: JwtException) {
+        logger.error { jwtException.message }
+        null
     }
 
+    data class JwtTokenDto(
+        val subject: String,
+        val expiration: Date,
+        val role: String,
+    ) {
+        companion object {
+            fun fromClaims(claims: Jws<Claims>): JwtTokenDto = JwtTokenDto(
+                subject = claims.body.subject,
+                expiration = claims.body.expiration,
+                role = claims.body["role"].toString()
+            )
+        }
+    }
 }

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.exceptions.JWTDecodeException
 import com.auth0.jwt.interfaces.DecodedJWT
+import com.practice.kopring.common.exception.user.NotExistsUserException
 import com.practice.kopring.user.enumerate.Role
 import java.util.*
 import org.apache.logging.log4j.kotlin.Logging
@@ -17,14 +18,11 @@ import org.springframework.stereotype.Service
 @Service
 class Auth0JwtTokenProvider(
     @Value("\${jwt.secret}") private val secretKey: String,
-    @Value("\${jwt.secret}") private val issuer: String,
+    @Value("\${jwt.issuer}") private val issuer: String,
+    @Value("\${jwt.access_token}") private val accessTokenExpiredTime: Long,
+    @Value("\${jwt.refresh_token}") private val refreshTokenExpiredTime: Long,
 ) : JwtTokenProvider {
-    companion object : Logging {
-        private const val DAY: Long = 24 * 60 * 60 * 1_000L
-        private const val WEEK: Long = 7 * DAY
-        private const val ACCESS_TOKEN_EXPIRED_TIME: Long = 1 * DAY
-        private const val REFRESH_TOKEN_EXPIRED_WEEK: Long = 1 * WEEK
-    }
+    companion object : Logging
 
     private val algorithm: Algorithm = Algorithm.HMAC512(this.secretKey)
 
@@ -34,7 +32,7 @@ class Auth0JwtTokenProvider(
             .withIssuer(this.issuer)
             .withClaim("role", role.key)
             .withIssuedAt(Date(System.currentTimeMillis()))
-            .withExpiresAt(Date(System.currentTimeMillis() + ACCESS_TOKEN_EXPIRED_TIME))
+            .withExpiresAt(Date(System.currentTimeMillis() + this.accessTokenExpiredTime))
             .sign(this.algorithm)
     }
 
@@ -43,11 +41,26 @@ class Auth0JwtTokenProvider(
             .withSubject(id)
             .withIssuer(this.issuer)
             .withIssuedAt(Date(System.currentTimeMillis()))
-            .withExpiresAt(Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRED_WEEK))
+            .withExpiresAt(Date(System.currentTimeMillis() + this.refreshTokenExpiredTime))
             .sign(this.algorithm)
     }
 
     override fun validate(token: String?): Boolean = this.decodedJWT(token)?.expiresAt?.after(Date()) ?: false
+    override fun getSubject(token: String?): String = this.decodedJWT(token)?.subject ?: throw NotExistsUserException()
+    override fun refreshTokenExpireTime(): Long = this.refreshTokenExpiredTime
+    override fun getAuthentication(token: String): Authentication = UsernamePasswordAuthenticationToken(
+        this.getSubject(token), null, this.getAuthorities(token)
+    )
+
+    private fun getAuthorities(token: String): Collection<GrantedAuthority> {
+        val jwt: DecodedJWT? = this.decodedJWT(token)
+        return setOf(SimpleGrantedAuthority(Role.of(jwt?.claims?.get("role").toString()).key))
+    }
+
+    override fun getExpiration(token: String?): Long =
+        decodedJWT(token)?.expiresAt?.let { it.time - System.currentTimeMillis() } ?: -1L
+
+    override fun getRole(token: String?): Role = Role.of(decodedJWT(token)?.getClaim("role")?.asString())
 
     private fun decodedJWT(token: String?): DecodedJWT? = try {
         JWT.require(this.algorithm).build().verify(token)
@@ -55,22 +68,4 @@ class Auth0JwtTokenProvider(
         logger.error { "JWTDecodeException: ${jwtDecodeException.message}" }
         null
     }
-
-    override fun getUserId(token: String?): String? = this.decodedJWT(token)?.subject
-
-    override fun getAuthentication(token: String): Authentication = UsernamePasswordAuthenticationToken(
-        this.getUserId(token), null, this.getAuthorities(token)
-    )
-
-    private fun getAuthorities(token: String): Collection<GrantedAuthority>? {
-        val jwt: DecodedJWT? = this.decodedJWT(token)
-        return Collections.singletonList(SimpleGrantedAuthority(jwt?.claims?.get("role").toString()))
-    }
-
-    override fun getExpiration(accessToken: String): Long {
-        val expiration: Date? = this.decodedJWT(accessToken)?.expiresAt
-        return expiration?.let { it.time - System.currentTimeMillis() } ?: -1L
-    }
-
-    override fun refreshTokenExpireTime(): Long = REFRESH_TOKEN_EXPIRED_WEEK
 }

@@ -3,8 +3,10 @@ package com.practice.kopring.common.exception.handler
 import com.practice.kopring.common.dto.ErrorDto
 import com.practice.kopring.common.enumerate.ErrorMessage
 import com.practice.kopring.common.exception.BusinessException
+import com.practice.kopring.common.exception.DefaultBusinessException
+import com.practice.kopring.common.exception.auth.TokenProcessException
+import io.jsonwebtoken.JwtException
 import jakarta.servlet.http.HttpServletRequest
-import java.util.*
 import org.apache.logging.log4j.kotlin.Logging
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -76,10 +78,29 @@ class GlobalExceptionHandler {
             exception.javaClass.name
             exception
         }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+        val errorMessage: ErrorMessage = DefaultBusinessException().errorMessage
+        return ResponseEntity.status(errorMessage.status).body(
             ErrorDto(
-                exception.message as String,
-                "${exception.cause.toString()}\n${exception.localizedMessage}${Arrays.toString(exception.stackTrace)}"
+                errorMessage.name,
+                errorMessage.description,
+            )
+        )
+    }
+
+    @ExceptionHandler(value = [JwtException::class])
+    protected fun handleJwtException(
+        exception: Exception,
+        request: HttpServletRequest,
+    ): ResponseEntity<ErrorDto> {
+        logger.error {
+            exception.javaClass.name
+            exception
+        }
+        val errorMessage: ErrorMessage = TokenProcessException().errorMessage
+        return ResponseEntity.status(errorMessage.status).body(
+            ErrorDto(
+                errorMessage.name,
+                errorMessage.description
             )
         )
     }
