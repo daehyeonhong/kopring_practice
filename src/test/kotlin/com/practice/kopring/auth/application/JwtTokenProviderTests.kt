@@ -13,11 +13,14 @@ class JwtTokenProviderTests {
 
     private val accessTokenExpiredTime: Long = 1500
     private val refreshTokenExpiredTime: Long = 3000
-    private val secretKey: String = "qqweqwewqewe"
-    private val issuer: String = "hahaha"
+    private val secretKey: String = "its_secret_key_for_test_only"
+    private val issuer: String = "http://localhost:8080"
     private val validAuth0JwtTokenProvider: Auth0JwtTokenProvider =
         Auth0JwtTokenProvider(
-            secretKey, issuer, accessTokenExpiredTime, refreshTokenExpiredTime
+            secretKey = this.secretKey,
+            issuer = this.issuer,
+            accessTokenExpiredTime = this.accessTokenExpiredTime,
+            refreshTokenExpiredTime = this.refreshTokenExpiredTime
         )
     private val invalidAuth0JwtTokenProvider: Auth0JwtTokenProvider =
         Auth0JwtTokenProvider(this.secretKey, this.issuer, 0, 0)
