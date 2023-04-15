@@ -13,7 +13,6 @@ import org.apache.logging.log4j.kotlin.Logging
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
-import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 
 class OktaJwtTokenProvider(
@@ -32,7 +31,7 @@ class OktaJwtTokenProvider(
         .setSubject(id)
         .setIssuedAt(Date(System.currentTimeMillis()))
         .setExpiration(Date(System.currentTimeMillis() + this.accessTokenExpiredTime))
-        .claim("role", role)
+        .claim("role", role.key)
         .signWith(this.secretKey)
         .compact()
 
@@ -44,17 +43,19 @@ class OktaJwtTokenProvider(
         .signWith(this.secretKey)
         .compact()
 
-    override fun validate(token: String?): Boolean = this.verifyToken(token).expiration.before(Date())
-    override fun getSubject(token: String?): String = this.verifyToken(token).subject
+    override fun validate(token: String?): Boolean = this.verifyToken(token).expiration.after(Date())
+    override fun getSubject(token: String?): String =
+        this.verifyToken(token).subject.ifBlank { throw TokenInvalidException() }
+
     override fun refreshTokenExpireTime(): Long = this.refreshTokenExpiredTime
     override fun getExpiration(token: String?): Long = this.verifyToken(token).expiration.time
     override fun getRole(token: String?): Role = Role.of(this.verifyToken(token).role)
-    override fun getAuthentication(token: String): Authentication = UsernamePasswordAuthenticationToken(
-        this.getSubject(token), null, this.getAuthorities(token)
-    )
-
-    private fun getAuthorities(token: String): Collection<GrantedAuthority> =
-        setOf(SimpleGrantedAuthority(this.getRole(token).key))
+    override fun getAuthentication(token: String): Authentication {
+        val verifyToken: JwtTokenDto = this.verifyToken(token)
+        return UsernamePasswordAuthenticationToken(
+            verifyToken.subject, null, setOf(SimpleGrantedAuthority(Role.of(verifyToken.role).key))
+        )
+    }
 
     private fun verifyToken(token: String?): JwtTokenDto = try {
         JwtTokenDto.fromClaims(
