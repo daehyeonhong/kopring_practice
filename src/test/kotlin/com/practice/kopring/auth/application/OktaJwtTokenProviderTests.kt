@@ -1,29 +1,33 @@
 package com.practice.kopring.auth.application
 
-import com.auth0.jwt.exceptions.JWTDecodeException
-import com.auth0.jwt.exceptions.TokenExpiredException
 import com.practice.kopring.common.exception.auth.TokenInvalidException
 import com.practice.kopring.user.enumerate.Role
 import org.apache.logging.log4j.kotlin.Logging
 import org.assertj.core.api.Assertions
 import org.junit.jupiter.api.Test
+import org.springframework.security.core.Authentication
 
-class JwtTokenProviderTests {
+class OktaJwtTokenProviderTests {
     companion object : Logging
 
     private val accessTokenExpiredTime: Long = 1500
     private val refreshTokenExpiredTime: Long = 3000
     private val secretKey: String = "its_secret_key_for_test_only"
     private val issuer: String = "http://localhost:8080"
-    private val validAuth0JwtTokenProvider: Auth0JwtTokenProvider =
-        Auth0JwtTokenProvider(
-            secretKey = this.secretKey,
+    private val validAuth0JwtTokenProvider: OktaJwtTokenProvider =
+        OktaJwtTokenProvider(
+            secret = this.secretKey,
             issuer = this.issuer,
             accessTokenExpiredTime = this.accessTokenExpiredTime,
             refreshTokenExpiredTime = this.refreshTokenExpiredTime
         )
-    private val invalidAuth0JwtTokenProvider: Auth0JwtTokenProvider =
-        Auth0JwtTokenProvider(this.secretKey, this.issuer, 0, 0)
+    private val invalidAuth0JwtTokenProvider: OktaJwtTokenProvider =
+        OktaJwtTokenProvider(
+            secret = this.secretKey,
+            issuer = this.issuer,
+            accessTokenExpiredTime = 0,
+            refreshTokenExpiredTime = 0
+        )
 
     @Test
     fun `create Access token`() {
@@ -58,7 +62,7 @@ class JwtTokenProviderTests {
     fun `token authentication null test`() {
         Assertions.assertThatThrownBy {
             this.validAuth0JwtTokenProvider.getRole("asdsd")
-        }.isInstanceOf(JWTDecodeException::class.java)
+        }.isInstanceOf(TokenInvalidException::class.java)
     }
 
     @Test
@@ -73,7 +77,7 @@ class JwtTokenProviderTests {
         val accessToken: String = this.invalidAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
         Assertions.assertThatThrownBy {
             this.validAuth0JwtTokenProvider.getExpiration(accessToken)
-        }.isInstanceOf(TokenExpiredException::class.java)
+        }.isInstanceOf(TokenInvalidException::class.java)
     }
 
     @Test
@@ -81,7 +85,7 @@ class JwtTokenProviderTests {
         val accessToken: String = this.invalidAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
         Assertions.assertThatThrownBy {
             this.validAuth0JwtTokenProvider.validate(accessToken)
-        }.isInstanceOf(TokenExpiredException::class.java)
+        }.isInstanceOf(TokenInvalidException::class.java)
     }
 
     @Test
@@ -111,7 +115,7 @@ class JwtTokenProviderTests {
     @Test
     fun `getAuthentication Test`() {
         val accessToken: String = this.validAuth0JwtTokenProvider.createAccessToken("PAYLOAD", Role.USER)
-        val authentication = this.validAuth0JwtTokenProvider.getAuthentication(accessToken)
+        val authentication: Authentication = this.validAuth0JwtTokenProvider.getAuthentication(accessToken)
         logger.info { "authentication: ${authentication}" }
         Assertions.assertThat(authentication).isNotNull()
     }
