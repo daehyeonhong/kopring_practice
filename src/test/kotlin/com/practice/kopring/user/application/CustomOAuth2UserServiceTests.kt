@@ -20,7 +20,7 @@ class CustomOAuth2UserServiceTests(
 ) {
     @MockBean
     @Qualifier("defaultOAuth2UserService")
-    private val defaultOAuth2UserService: DefaultOAuth2UserService? = null
+    private lateinit var defaultOAuth2UserService: DefaultOAuth2UserService
 
     @Test
     fun loadUserOfNull() {

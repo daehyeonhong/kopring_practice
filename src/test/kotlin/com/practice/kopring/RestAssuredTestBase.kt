@@ -1,3 +1,4 @@
+
 import io.restassured.builder.RequestSpecBuilder
 import io.restassured.specification.RequestSpecification
 import org.junit.jupiter.api.BeforeEach
@@ -20,7 +21,7 @@ abstract class RestAssuredTestBase(@LocalServerPort private val port: Int) {
     @BeforeEach
     fun setUp(
         context: WebApplicationContext,
-        restDocumentation: RestDocumentationContextProvider
+        restDocumentation: RestDocumentationContextProvider,
     ) {
         this.spec = RequestSpecBuilder()
             .addFilter(

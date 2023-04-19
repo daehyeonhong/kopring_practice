@@ -1,5 +1,6 @@
 package com.practice.kopring.user.application
 
+import com.practice.kopring.common.exception.user.NotExistsUserException
 import com.practice.kopring.user.domain.UserEntity
 import com.practice.kopring.user.infrastructure.UserRepository
 import org.springframework.stereotype.Service
@@ -10,11 +11,8 @@ class UserService(
     private val userRepository: UserRepository,
 ) {
     @Transactional
-    fun checkExistEmail(email: String): Boolean {
-        return this.userRepository.existsByEmail(email)
-    }
+    fun checkExistEmail(email: String): Boolean = this.userRepository.existsByEmail(email)
 
-    fun findByEmail(email: String): UserEntity {
-        return this.userRepository.findByEmail(email)!!
-    }
+    fun findByEmail(email: String): UserEntity =
+        this.userRepository.findByEmail(email) ?: throw NotExistsUserException()
 }
