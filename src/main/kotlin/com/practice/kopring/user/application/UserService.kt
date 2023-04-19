@@ -7,9 +7,8 @@ import org.springframework.transaction.annotation.Transactional
 
 @Service
 class UserService(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) {
-
     @Transactional
     fun checkExistEmail(email: String): Boolean {
         return this.userRepository.existsByEmail(email)
