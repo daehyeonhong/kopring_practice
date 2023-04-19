@@ -2,7 +2,6 @@ package com.practice.kopring.auth.filter
 
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.auth.enumerate.Token
-import com.practice.kopring.common.exception.auth.TokenInvalidException
 import com.practice.kopring.user.application.UserRedisCacheService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
@@ -20,22 +19,22 @@ class JwtFilter(
         response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
-        val token: String = this.resolveToken(request)
-        if (token.isNotBlank() && this.jwtTokenProvider.validate(token)) {
+        val token: String? = this.resolveToken(request)
+        if (!token.isNullOrBlank() && this.jwtTokenProvider.validate(token)) {
             val isLogout: String? = this.userRedisCacheService.getWithToken(token)
             if (isLogout.isNullOrBlank())
                 SecurityContextHolder.getContext().authentication = this.jwtTokenProvider.getAuthentication(token)
-        } else throw TokenInvalidException()
+        }
         filterChain.doFilter(request, response)
     }
 
-    private fun resolveToken(request: HttpServletRequest): String =
+    private fun resolveToken(request: HttpServletRequest): String? =
         this.resolveToken(request.getHeader(Token.AUTHORIZATION_HEADER.value))
 
-    private fun resolveToken(bearerToken: String?): String = when {
+    private fun resolveToken(bearerToken: String?): String? = when {
         !bearerToken.isNullOrBlank() && bearerToken.startsWith(Token.BEARER_PREFIX.value) ->
             bearerToken.replace(Token.BEARER_PREFIX.value, "")
 
-        else -> throw TokenInvalidException()
+        else -> null
     }
 }
