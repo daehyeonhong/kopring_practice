@@ -9,6 +9,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.core.OAuth2AuthenticationException
+import org.springframework.security.test.context.support.WithMockUser
 
 
 @SpringBootTest
@@ -28,5 +29,23 @@ class CustomOAuth2UserServiceTests(
             customOAuth2UserService.loadUser(null)
         }
     }
+
+    @Test
+    @WithMockUser
+    fun loadUserOfNotNull() {
+        Assertions.assertThrows(OAuth2AuthenticationException::class.java) {
+//            OAuth2UserRequest(
+//                OAuth2AuthorizationRequest.authorizationCode(),
+//                OAuth2AuthorizationResponse.success("code"),
+//                OAuth2AuthorizationExchange(
+//                    OAuth2AuthorizationRequest.authorizationCode().build(),
+//                    OAuth2AuthorizationResponse.success("code").build()
+//                ),
+//                "registrationId"
+//            )
+            customOAuth2UserService.loadUser(null)
+        }
+    }
+
 
 }
