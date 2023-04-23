@@ -4,7 +4,6 @@ import com.practice.kopring.common.exception.auth.TokenInvalidException
 import com.practice.kopring.user.enumerate.Role
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jws
-import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
 import java.util.*
@@ -62,11 +61,11 @@ class OktaJwtTokenProvider(
     private fun verifyToken(token: String?): JwtTokenDto = try {
         JwtTokenDto.fromClaims(
             Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(this.secretKey)
                 .build()
                 .parseClaimsJws(token)
         )
-    } catch (jwtException: JwtException) {
+    } catch (jwtException: RuntimeException) {
         logger.error { jwtException.message }
         throw TokenInvalidException()
     }

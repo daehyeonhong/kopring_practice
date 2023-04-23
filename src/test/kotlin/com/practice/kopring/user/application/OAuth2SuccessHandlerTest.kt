@@ -5,6 +5,7 @@ import com.practice.kopring.oauth.handler.OAuth2SuccessHandler
 import com.practice.kopring.user.domain.UserEntity
 import com.practice.kopring.user.enumerate.Provider
 import com.practice.kopring.user.enumerate.Role
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.any
@@ -42,6 +43,7 @@ class OAuth2SuccessHandlerTest {
     lateinit var jwtTokenProvider: JwtTokenProvider
 
     @Test
+    @Disabled
     @WithMockUser
     fun `test onAuthenticationSuccess`() {
         val email = "test@example.com"

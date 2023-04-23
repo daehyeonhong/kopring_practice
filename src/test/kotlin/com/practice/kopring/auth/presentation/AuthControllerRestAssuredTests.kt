@@ -20,7 +20,6 @@ class AuthControllerRestAssuredTests(
     @Autowired private var auth0JwtTokenProvider: JwtTokenProvider,
     @Value("\${user_id.key}") private val userId: String,
 ) : RestAssuredTestBase(port) {
-    @Disabled
     @Test
     fun login(): Unit {
         val response = RestAssured.given(spec).log().all()
@@ -35,7 +34,6 @@ class AuthControllerRestAssuredTests(
 
     companion object : Logging
 
-    @Disabled
     @Test
     fun logout(): Unit {
         val accessToken: String = this.auth0JwtTokenProvider.createAccessToken(this.userId, Role.USER)
@@ -57,8 +55,8 @@ class AuthControllerRestAssuredTests(
         response.prettyPrint()
     }
 
-    @Disabled
     @Test
+    @Disabled
     fun refresh(): Unit {
         val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken(this.userId)
         val response = RestAssured.given(spec).log().all()
@@ -75,7 +73,6 @@ class AuthControllerRestAssuredTests(
             .extract().response()
     }
 
-    @Disabled
     @Test
     fun redirectCookieTest(): Unit {
         RestAssured.given(spec).log().all()
