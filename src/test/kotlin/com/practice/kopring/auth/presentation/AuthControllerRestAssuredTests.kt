@@ -2,12 +2,13 @@ package com.practice.kopring.auth.presentation
 
 import RestAssuredTestBase
 import com.practice.kopring.auth.application.JwtTokenProvider
+import com.practice.kopring.auth.dto.RefreshToken
 import com.practice.kopring.auth.enumerate.Token
+import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.enumerate.Role
 import io.restassured.RestAssured
 import org.apache.http.HttpStatus
 import org.apache.logging.log4j.kotlin.Logging
-import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -17,7 +18,8 @@ import org.springframework.restdocs.restassured.RestAssuredRestDocumentation
 
 class AuthControllerRestAssuredTests(
     @LocalServerPort private val port: Int,
-    @Autowired private var auth0JwtTokenProvider: JwtTokenProvider,
+    @Autowired private val auth0JwtTokenProvider: JwtTokenProvider,
+    @Autowired private val userRedisCacheService: UserRedisCacheService,
     @Value("\${user_id.key}") private val userId: String,
 ) : RestAssuredTestBase(port) {
     @Test
@@ -56,9 +58,9 @@ class AuthControllerRestAssuredTests(
     }
 
     @Test
-    @Disabled
     fun refresh(): Unit {
         val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken(this.userId)
+        this.userRedisCacheService.save(RefreshToken(refreshToken, this.userId), 1000 * 60 * 60 * 24 * 7)
         val response = RestAssured.given(spec).log().all()
             .`when`().filter(
                 RestAssuredRestDocumentation.document(
