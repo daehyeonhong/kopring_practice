@@ -1,4 +1,4 @@
-FROM openjdk:17-jdk
+FROM --platform=linux/amd64 openjdk:17-jdk
 ARG JAR_FILE=build/libs/*.jar
 ARG STAGE=dev
 ENV STAGE=${STAGE}
