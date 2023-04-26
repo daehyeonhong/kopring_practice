@@ -40,6 +40,8 @@ class AuthControllerRestAssuredTests(
     fun logout(): Unit {
         val accessToken: String = this.auth0JwtTokenProvider.createAccessToken(this.userId, Role.USER)
         logger.info("${Token.ACCESS_TOKEN.name}: ${accessToken}")
+        val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken(this.userId)
+        this.userRedisCacheService.save(RefreshToken(refreshToken, this.userId), 1000 * 60 * 60 * 24 * 7)
 
         val response = RestAssured.given(spec).log().all()
             .`when`().filter(
