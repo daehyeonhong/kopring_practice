@@ -1,14 +1,13 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/configuration-reference/#jobs
-jobs:
-  checkout-and-build:
+executors:
+  exc:
     docker:
       - image: cimg/openjdk:17.0.7
-    steps:
-      - checkout
-      - run:
-          command: ./gradlew clean build
+    resource_class: medium
+
+workflows:
+  checkout-and-build:
+    jobs:
+      - gradle/run:
+          executor: exc
