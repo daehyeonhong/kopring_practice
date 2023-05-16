@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CustomOAuth2UserService(
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
 ) : OAuth2UserService<OAuth2UserRequest, OAuth2User> {
 
     override fun loadUser(userRequest: OAuth2UserRequest?): OAuth2User {
@@ -47,22 +47,26 @@ class CustomOAuth2UserService(
         val userEntity: UserEntity? = userRepository.findByEmail(email)
         val name = data["name"] as String
         val picture = data["picture"] as String
-        userEntity?.let {
-            if (it.provider === provider) {
-                it.loginUpdate(name, picture)
-                return it
-            }
-            throw InvalidUserProviderException()
-        } ?: run {
-            return userRepository.save(
-                UserEntity(
-                    name = name,
-                    email = email,
-                    picture = picture,
-                    role = Role.USER,
-                    provider = provider
+        return when (userEntity) {
+            null -> {
+                this.userRepository.save(
+                    UserEntity(
+                        name = name,
+                        email = email,
+                        picture = picture,
+                        role = Role.USER,
+                        provider = provider
+                    )
                 )
-            )
+            }
+
+            else -> {
+                if (userEntity.provider === provider) {
+                    userEntity.loginUpdate(name, picture)
+                    return userEntity
+                }
+                throw InvalidUserProviderException()
+            }
         }
     }
 }
