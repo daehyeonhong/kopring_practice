@@ -29,7 +29,7 @@ jobs:
         shell: bash
 
       - name: Copy wallet files from S3
-        run: aws s3 cp ${{ secrets.OCI_DATABASE_WALLET }}
+        run: aws s3 cp ${{ secrets.OCI_DATABASE_WALLET }} .
 
       - name: Unzip wallet files
         run: unzip wallet.zip
