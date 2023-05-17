@@ -30,13 +30,12 @@ jobs:
 
       - name: Copy wallet files from S3
         run: aws s3 cp ${{secrets.OCI_DATABASE_WALLET}}
+
       - name: Unzip wallet files
         run: unzip wallet.zip
 
       - name: Build with Gradle
         run: ./gradlew clean build
-
-      - name: Upload artifact
 
       - name: Set artifact
         run: echo "artifact=$(ls ./build/libs/*.jar)" >> $GITHUB_ENV
