@@ -24,7 +24,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: deliver application.properties
+      - name: deliver application.yml
         run: echo "${{ secrets.APPLICATION_BUILD }}" > ./src/main/resources/application.yml
         shell: bash
 
