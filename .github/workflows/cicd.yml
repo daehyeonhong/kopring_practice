@@ -29,10 +29,10 @@ jobs:
         shell: bash
 
       - name: Copy wallet files from S3
-        run: aws s3 cp ${{ secrets.OCI_DATABASE_WALLET }} .
+        run: aws s3 cp s3://ignorance-info/oci_database_wallet.zip .
 
       - name: Unzip wallet files
-        run: unzip wallet.zip
+        run: unzip oci_database_wallet.zip
 
       - name: Build with Gradle
         run: ./gradlew clean build
