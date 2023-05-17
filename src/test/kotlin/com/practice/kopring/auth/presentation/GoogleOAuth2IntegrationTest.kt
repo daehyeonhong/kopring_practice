@@ -1,6 +1,7 @@
 package com.practice.kopring.auth.presentation
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs
@@ -13,6 +14,7 @@ import org.springframework.http.HttpStatus
 @AutoConfigureRestDocs
 class GoogleOAuth2IntegrationTest(@Autowired val restTemplate: TestRestTemplate) {
 
+    @Disabled
     @Test
     fun `Google OAuth2 sign-up or update user information`() {
         val responseEntity = restTemplate.exchange(

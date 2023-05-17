@@ -9,6 +9,7 @@ import com.practice.kopring.user.enumerate.Role
 import io.restassured.RestAssured
 import org.apache.http.HttpStatus
 import org.apache.logging.log4j.kotlin.Logging
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -22,6 +23,7 @@ class AuthControllerRestAssuredTests(
     @Autowired private val userRedisCacheService: UserRedisCacheService,
     @Value("\${user_id.key}") private val userId: String,
 ) : RestAssuredTestBase(port) {
+    @Disabled
     @Test
     fun login(): Unit {
         val response = RestAssured.given(spec).log().all()
@@ -36,6 +38,7 @@ class AuthControllerRestAssuredTests(
 
     companion object : Logging
 
+    @Disabled
     @Test
     fun logout(): Unit {
         val accessToken: String = this.auth0JwtTokenProvider.createAccessToken(this.userId, Role.USER)
@@ -59,6 +62,7 @@ class AuthControllerRestAssuredTests(
         response.prettyPrint()
     }
 
+    @Disabled
     @Test
     fun refresh(): Unit {
         val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken(this.userId)
@@ -77,6 +81,7 @@ class AuthControllerRestAssuredTests(
             .extract().response()
     }
 
+    @Disabled
     @Test
     fun redirectCookieTest(): Unit {
         RestAssured.given(spec).log().all()

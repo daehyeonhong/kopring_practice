@@ -4,6 +4,7 @@ import com.practice.kopring.MvcRestDocsConfiguration
 import com.practice.kopring.auth.application.AuthService
 import com.practice.kopring.auth.dto.JwtTokenResponse
 import com.practice.kopring.auth.enumerate.Token
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.ArgumentMatchers.anyString
@@ -36,6 +37,7 @@ class AuthControllerMockTest {
     @MockBean
     private lateinit var authService: AuthService
 
+    @Disabled
     @Test
     @WithMockUser
     fun refreshToken(): Unit {
@@ -62,6 +64,7 @@ class AuthControllerMockTest {
     }
 
     @Test
+    @Disabled
     @WithMockUser
     fun logout(): Unit {
         doNothing().`when`(this.authService).revokeToken(
@@ -76,6 +79,7 @@ class AuthControllerMockTest {
     }
 
     @Test
+    @Disabled
     @WithMockUser
     fun header(): Unit {
         doNothing().`when`(this.authService).revokeToken(

@@ -35,6 +35,12 @@ configurations {
     }
 }
 
+tasks {
+    named("jar") {
+        enabled = false
+    }
+}
+
 val snippetsDir by extra {
     file("build/generated-snippets")
 }
