@@ -2,12 +2,12 @@ import org.asciidoctor.gradle.jvm.AsciidoctorTask
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "3.0.4"
+    id("org.springframework.boot") version "3.1.0"
     id("io.spring.dependency-management") version "1.1.0"
     id("org.asciidoctor.jvm.convert") version "3.3.2"
-    kotlin("jvm") version "1.8.0"
-    kotlin("plugin.spring") version "1.8.0"
-    kotlin("plugin.jpa") version "1.8.0"
+    kotlin("jvm") version "1.8.21"
+    kotlin("plugin.spring") version "1.8.21"
+    kotlin("plugin.jpa") version "1.8.21"
     jacoco
 }
 
@@ -74,7 +74,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.0-rc2")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.15.1")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
     implementation("org.springframework.data:spring-data-rest-hal-explorer")
@@ -82,12 +82,12 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api-kotlin:1.2.0")
     implementation("org.springframework.boot:spring-boot-starter-data-redis")
 
-    implementation("com.auth0:java-jwt:4.3.0")
+    implementation("com.auth0:java-jwt:4.4.0")
     implementation("io.jsonwebtoken:jjwt-api:0.11.5")
     implementation("io.jsonwebtoken:jjwt-impl:0.11.5")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.11.5")
 
-    implementation("com.github.f4b6a3:ulid-creator:5.1.0")
+    implementation("com.github.f4b6a3:ulid-creator:5.2.0")
 
     developmentOnly("org.springframework.boot:spring-boot-devtools")
 
