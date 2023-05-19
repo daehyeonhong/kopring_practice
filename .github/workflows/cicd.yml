@@ -32,10 +32,10 @@ jobs:
         run: aws s3 cp s3://ignorance-info/oci_database_wallet.zip .
 
       - name: Unzip wallet files
-        run: pwd && unzip oci_database_wallet.zip
+        run: unzip oci_database_wallet.zip && ls
 
       - name: Build with Gradle
-        run: ./gradlew clean build
+        run: ./gradlew clean test -i
 
       - name: Set artifact
         run: echo "artifact=$(ls ./build/libs/*.jar)" >> $GITHUB_ENV
