@@ -35,7 +35,7 @@ jobs:
         run: unzip oci_database_wallet.zip
 
       - name: Build with Gradle
-        run: ./gradlew clean test -i
+        run: ./gradlew clean build
 
       - name: Set artifact
         run: echo "artifact=$(ls ./build/libs/*.jar)" >> $GITHUB_ENV
