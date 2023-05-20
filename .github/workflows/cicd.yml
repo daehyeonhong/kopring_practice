@@ -32,7 +32,7 @@ jobs:
         run: aws s3 cp s3://ignorance-info/oci_database_wallet.zip .
 
       - name: Unzip wallet files
-        run: unzip oci_database_wallet.zip && ls
+        run: unzip oci_database_wallet.zip
 
       - name: Build with Gradle
         run: ./gradlew clean test -i
