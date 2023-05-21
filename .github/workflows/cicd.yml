@@ -36,7 +36,7 @@ jobs:
 
       - name: Copy wallet files from S3
         run: |
-          aws s3 cp s3://ignorance-info/dev-oci-database-wallet.zip .
+          aws s3 cp s3://aws-server-build/dev-oci-database-wallet.zip .
           aws s3 cp s3://aws-server-build/application-database.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-oauth.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-security.yml ./src/main/resources
