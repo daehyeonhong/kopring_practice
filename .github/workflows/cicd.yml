@@ -65,6 +65,7 @@ jobs:
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
+          cp -r ./dev-oci-database-wallet ./deploy/wallet/
           zip -r -qq -j ./spring-build.zip ./deploy
 
       - name: upload project to s3
