@@ -4,6 +4,9 @@ on:
   push:
     branches: [ master ]
 
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -14,7 +17,8 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - uses: zhulik/redis-action@1.1.0
+      - name: Setup Redis
+        uses: zhulik/redis-action@1.1.0
         with:
           redis version: '5'
           number of databases: 100
@@ -39,18 +43,38 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: Copy wallet files from S3
+      - name: copy wallet file and yml files
         run: |
           aws s3 cp s3://aws-server-build/dev-oci-database-wallet.zip .
           aws s3 cp s3://aws-server-build/application-database.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-oauth.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-security.yml ./src/main/resources
 
-      - name: Unzip wallet files
+      - name: unzip wallet files
         run: unzip dev-oci-database-wallet.zip
 
-      - name: Build with Gradle
+      - name: build project
         run: ./gradlew clean build
 
-      - name: Set artifact
-        run: echo "artifact=$(ls ./build/libs/*.jar)" >> $GITHUB_ENV
+      - name: create deploy zip
+        run: |
+          mkdir deploy
+          cp ./docker/docker-compose.blue.yml ./deploy/
+          cp ./docker/docker-compose.green.yml ./deploy/
+          cp ./appspec.yml ./deploy/
+          cp ./docker/Dockerfile ./deploy/
+          cp ./scripts/*.sh ./deploy/
+          cp ./build/libs/*.jar ./deploy/
+          zip -r -qq -j ./spring-build.zip ./deploy
+
+      - name: upload project to s3
+        run: |
+          aws s3 cp \
+          --region ap-northeast-2 \
+          ./spring-build.zip s3://aws-server-build
+
+      - name: create deploy group
+        run: aws deploy create-deployment --application-name backend-deploy-group
+          --deployment-config-name CodeDeployDefault.OneAtATime
+          --deployment-group-name backend-deploy-group
+          --s3-location bucket=backend-rex-bucket,bundleType=zip,key=spring-build.zip
