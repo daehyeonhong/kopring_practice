@@ -1,5 +1,5 @@
 FROM --platform=linux/amd64 eclipse-temurin:17-jre
-ARG JAR_FILE=build/libs/*.jar
+ARG JAR_FILE=*.jar
 ARG STAGE=dev
 ENV STAGE=${STAGE}
 COPY ${JAR_FILE} app.jar
