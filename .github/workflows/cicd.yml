@@ -14,6 +14,16 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: gradle caching
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
 
@@ -24,15 +34,15 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_S3_SECRET_ACCESS_KEY }}
           aws-region: ap-northeast-2
 
-      - name: deliver application.yml
-        run: rm ./src/main/resources/application.yml && echo "${{ secrets.APPLICATION_BUILD }}" > ./src/main/resources/application.yml
-        shell: bash
-
       - name: Copy wallet files from S3
-        run: aws s3 cp s3://ignorance-info/oci_database_wallet.zip .
+        run: |
+          aws s3 cp s3://ignorance-info/dev-oci-database-wallet.zip .
+          aws s3 cp s3://aws-server-build/application-database.yml ./src/main/resources
+          aws s3 cp s3://aws-server-build/application-oauth.yml ./src/main/resources
+          aws s3 cp s3://aws-server-build/application-security.yml ./src/main/resources
 
       - name: Unzip wallet files
-        run: unzip oci_database_wallet.zip
+        run: unzip dev-oci-database-wallet.zip
 
       - name: Build with Gradle
         run: ./gradlew clean build
