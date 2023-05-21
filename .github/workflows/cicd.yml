@@ -74,7 +74,7 @@ jobs:
           ./spring-build.zip s3://aws-server-build
 
       - name: create deploy group
-        run: aws deploy create-deployment --application-name backend-deploy-group
+        run: aws deploy create-deployment --application-name dev-aws-code_deploy
           --deployment-config-name CodeDeployDefault.OneAtATime
-          --deployment-group-name backend-deploy-group
-          --s3-location bucket=backend-rex-bucket,bundleType=zip,key=spring-build.zip
+          --deployment-group-name dev-aws-code_deploy
+          --s3-location bucket=aws-server-build,bundleType=zip,key=spring-build.zip
