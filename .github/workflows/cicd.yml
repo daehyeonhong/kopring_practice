@@ -67,7 +67,7 @@ jobs:
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
           cp -r ./Wallet_JCLNMMNRL6DRLP31/* ./deploy/
-          zip -r -qq -j ./spring-build.zip ./deploy
+          zip -r -qq ./spring-build.zip ./deploy
 
       - name: upload project to s3
         run: |
