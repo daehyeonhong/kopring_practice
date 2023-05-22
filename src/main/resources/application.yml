@@ -10,10 +10,6 @@ spring:
         - oauth-local
         - database-local
         - security-local
-      build:
-        - oauth-local
-        - database-build
-        - security-local
       dev:
         - oauth-dev
         - database-dev
