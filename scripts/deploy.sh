@@ -16,6 +16,7 @@ if [ -z "$EXIST_BLUE" ]; then
 
   sleep 30
 
+  sudo docker network connect spring-network ${DOCKER_APP_NAME}-blue
   echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
 
   sudo docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml down
@@ -30,6 +31,7 @@ else
 
   sleep 30
 
+  sudo docker network connect spring-network ${DOCKER_APP_NAME}-green
   echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
   sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml down
   sudo docker image prune -af
@@ -37,8 +39,7 @@ else
   echo "blue 중단 완료 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
 
 fi
-  echo "배포 종료  : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
-  sudo docker network connect spring-network spring-blue
-  echo sudo service nginx reload >>/home/ec2-user/deploy.log
-  echo "===================== 배포 완료 =====================" >>/home/ec2-user/deploy.log
-  echo >>home/ec2-user/deploy.log
+echo "배포 종료  : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
+echo sudo service nginx reload >>/home/ec2-user/deploy.log
+echo "===================== 배포 완료 =====================" >>/home/ec2-user/deploy.log
+echo >>home/ec2-user/deploy.log
