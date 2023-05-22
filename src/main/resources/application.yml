@@ -3,12 +3,15 @@ spring:
     ansi:
       enabled: always
   profiles:
-    active:
-      - local
+    active: local
     group:
       local:
         - oauth-local
         - database-local
+        - security-local
+      build:
+        - oauth-local
+        - database-build
         - security-local
       dev:
         - oauth-dev
