@@ -5,3 +5,5 @@ services:
     ports:
       - "8081:80"
     container_name: spring-blue
+    networks:
+      - spring-network

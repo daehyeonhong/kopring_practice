@@ -54,7 +54,7 @@ jobs:
         run: unzip dev-oci-database-wallet.zip
 
       - name: build project
-        run: ./gradlew clean build
+        run: ./gradlew clean build -Pprofile=build
 
       - name: create deploy zip
         run: |
@@ -66,7 +66,7 @@ jobs:
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
-          cp ./dev-oci-database-wallet.zip ./deploy/wallet/
+          cp -r ./dev-oci-database-wallet ./deploy/wallet/
           zip -r -qq -j ./spring-build.zip ./deploy
 
       - name: upload project to s3
