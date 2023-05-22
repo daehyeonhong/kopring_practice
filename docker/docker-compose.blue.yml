@@ -7,3 +7,7 @@ services:
     container_name: spring-blue
     networks:
       - spring-network
+
+networks:
+  spring-network:
+    driver: bridge
