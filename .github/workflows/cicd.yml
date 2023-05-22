@@ -51,7 +51,7 @@ jobs:
           aws s3 cp s3://aws-server-build/application-security.yml ./src/main/resources
 
       - name: unzip wallet files
-        run: unzip dev-oci-database-wallet.zip
+        run: unzip dev-oci-database-wallet.zip && ls -al
 
       - name: build project
         run: ./gradlew clean build -Pprofile=build

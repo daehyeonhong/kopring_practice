@@ -1,4 +1,4 @@
-FROM --platform=linux/amd64 eclipse-temurin:17-jre
+FROM --platform=linux/amd64 eclipse-temurin:17-jre-alpine
 ARG JAR_FILE=*.jar
 ARG STAGE=dev
 ENV STAGE=${STAGE}
