@@ -46,6 +46,7 @@ jobs:
       - name: copy wallet file and yml files
         run: |
           aws s3 cp s3://aws-server-build/dev-oci-database-wallet.zip .
+          aws s3 cp s3://aws-server-build/application.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-database.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-oauth.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-security.yml ./src/main/resources
@@ -54,7 +55,7 @@ jobs:
         run: unzip dev-oci-database-wallet.zip && ls -al
 
       - name: build project
-        run: ./gradlew clean build -Pspring.profiles.active=build
+        run: ./gradlew clean build
 
       - name: create deploy zip
         run: |
