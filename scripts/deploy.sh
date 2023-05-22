@@ -5,7 +5,6 @@ cd /home/ec2-user/app
 DOCKER_APP_NAME=spring
 
 EXIST_BLUE=$(sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
-
 echo "배포 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
 
 if [ -z "$EXIST_BLUE" ]; then
