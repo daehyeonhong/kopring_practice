@@ -46,7 +46,6 @@ jobs:
       - name: copy wallet file and yml files
         run: |
           aws s3 cp s3://aws-server-build/dev-oci-database-wallet.zip .
-          rm ./src/main/resources/application.yml
           aws s3 cp s3://aws-server-build/application.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-database.yml ./src/main/resources
           aws s3 cp s3://aws-server-build/application-oauth.yml ./src/main/resources
@@ -60,7 +59,6 @@ jobs:
 
       - name: create deploy zip
         run: |
-          mkdir deploy
           mkdir deploy/wallet
           cp ./docker/docker-compose.blue.yml ./deploy/
           cp ./docker/docker-compose.green.yml ./deploy/
@@ -68,7 +66,7 @@ jobs:
           cp ./docker/Dockerfile ./deploy/
           cp ./scripts/*.sh ./deploy/
           cp ./build/libs/*.jar ./deploy/
-          cp -r ./Wallet_JCLNMMNRL6DRLP31 ./deploy/wallet/
+          cp -r ./Wallet_JCLNMMNRL6DRLP31/* ./deploy/
           zip -r -qq -j ./spring-build.zip ./deploy
 
       - name: upload project to s3
