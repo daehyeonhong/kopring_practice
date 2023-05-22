@@ -3,5 +3,5 @@ ARG JAR_FILE=*.jar
 ARG STAGE=dev
 ENV STAGE=${STAGE}
 COPY ${JAR_FILE} app.jar
-COPY ./deploy/wallet /home/spring/.oracle/wallet/Wallet_JCLNMMNRL6DRLP31
+COPY ./wallet /home/spring/.oracle/wallet/Wallet_JCLNMMNRL6DRLP31
 ENTRYPOINT ["java","-Djava.security.edg=file:/dev/./urandom","-jar", "-Dspring.profiles.active=${STAGE}", "/app.jar"]
