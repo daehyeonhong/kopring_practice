@@ -54,7 +54,7 @@ jobs:
         run: unzip dev-oci-database-wallet.zip && ls -al
 
       - name: build project
-        run: ./gradlew clean build -Pprofile=build
+        run: ./gradlew clean build -Pspring.profiles.active=build
 
       - name: create deploy zip
         run: |
