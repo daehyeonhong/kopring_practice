@@ -47,6 +47,7 @@ jobs:
         run: |
           aws s3 sync s3://aws-server-build/ ./src/main/resources --exclude "*" --include "application*.yml"
           aws s3 cp s3://aws-server-build/dev-oci-database-wallet.zip .
+          ls -al ./src/main/resources
 
       - name: unzip wallet files
         run: unzip dev-oci-database-wallet.zip
