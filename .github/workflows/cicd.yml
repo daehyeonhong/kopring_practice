@@ -47,15 +47,12 @@ jobs:
         run: |
           aws s3 sync s3://aws-server-build/ ./src/main/resources --exclude "*" --include "application*.yml"
           aws s3 cp s3://aws-server-build/dev-oci-database-wallet.zip .
-          ls -al ./src/main/resources
-          cat ./src/main/resources/application.yml
-          cat ./src/main/resources/application-database.yml
 
       - name: unzip wallet files
         run: unzip dev-oci-database-wallet.zip
 
       - name: build project
-        run: ./gradlew clean test -i
+        run: ./gradlew clean test -i -Pspring.profiles.active=build
 
       - name: create deploy zip
         run: |
