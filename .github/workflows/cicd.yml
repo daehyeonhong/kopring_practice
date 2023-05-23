@@ -45,8 +45,7 @@ jobs:
 
       - name: copy wallet file and yml files
         run: |
-          rm ./src/main/resources/application.yml
-          aws s3 cp s3://aws-server-build --include "application*.yml" ./src/main/resources
+          aws s3 cp s3://aws-server-build/application*.yml ./src/main/resources --recursive --force
           aws s3 cp s3://aws-server-build/dev-oci-database-wallet.zip .
 
       - name: unzip wallet files
