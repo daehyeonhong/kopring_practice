@@ -4,7 +4,7 @@ spring:
       enabled: always
   profiles:
     active:
-      - local
+      - build
     group:
       local:
         - oauth-local

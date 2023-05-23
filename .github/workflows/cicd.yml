@@ -52,7 +52,7 @@ jobs:
         run: unzip ${{ secrets.DEV_OCI_WALLET }}.zip
 
       - name: build project
-        run: ./gradlew clean test -i -Pspring.profiles.active=build
+        run: ./gradlew clean build
 
       - name: create deploy zip
         run: |
