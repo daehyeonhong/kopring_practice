@@ -11,9 +11,9 @@ spring:
         - database-local
         - security-local
       build:
-        - oauth-local
+        - oauth-build
         - database-build
-        - security-local
+        - security-build
       dev:
         - oauth-dev
         - database-dev
