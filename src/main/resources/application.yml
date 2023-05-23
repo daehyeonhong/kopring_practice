@@ -3,7 +3,8 @@ spring:
     ansi:
       enabled: always
   profiles:
-    active: local
+    active:
+      - local
     group:
       local:
         - oauth-local
