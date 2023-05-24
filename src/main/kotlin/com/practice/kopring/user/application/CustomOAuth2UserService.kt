@@ -14,6 +14,7 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException
 import org.springframework.security.oauth2.core.user.DefaultOAuth2User
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class CustomOAuth2UserService(
@@ -47,9 +48,9 @@ class CustomOAuth2UserService(
         val userEntity: UserEntity? = userRepository.findByEmail(email)
         val name = data["name"] as String
         val picture = data["picture"] as String
-        return when (userEntity) {
+        when (userEntity) {
             null -> {
-                this.userRepository.save(
+                return this.userRepository.save(
                     UserEntity(
                         name = name,
                         email = email,
@@ -62,8 +63,8 @@ class CustomOAuth2UserService(
 
             else -> {
                 if (userEntity.provider === provider) {
-                    userEntity.loginUpdate(name, picture)
-                    return userEntity
+                    userEntity.loginUpdate(name, UUID.randomUUID().toString())
+                    return this.userRepository.save(userEntity)
                 }
                 throw InvalidUserProviderException()
             }
