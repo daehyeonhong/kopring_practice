@@ -4,8 +4,10 @@ import com.practice.kopring.common.domain.PrimaryKeyEntity
 import com.practice.kopring.user.enumerate.Provider
 import com.practice.kopring.user.enumerate.Role
 import jakarta.persistence.*
+import org.springframework.data.jpa.domain.support.AuditingEntityListener
 
 @Entity
+@EntityListeners(value = [AuditingEntityListener::class])
 class UserEntity(
     name: String,
     email: String,

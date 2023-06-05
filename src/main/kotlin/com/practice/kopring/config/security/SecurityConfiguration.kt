@@ -29,7 +29,7 @@ class SecurityConfiguration(
     fun formLoginFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }
             .httpBasic { it.disable() }
-            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.NEVER) }
+            .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
                 it.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
                 it.requestMatchers("/users/login", "/users/failure", "/auth/refresh").permitAll()

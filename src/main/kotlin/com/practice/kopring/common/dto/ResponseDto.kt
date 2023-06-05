@@ -1,8 +1,8 @@
 package com.practice.kopring.common.dto
 
-import java.io.Serializable
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import java.io.Serializable
 
 data class ResponseDto<T>(val data: T) : Serializable {
     companion object {
@@ -12,11 +12,11 @@ data class ResponseDto<T>(val data: T) : Serializable {
             .status(HttpStatus.CREATED)
             .body(data)
 
-        fun noContent(): ResponseEntity<Void> = ResponseEntity
+        fun noContent(): ResponseEntity<Unit> = ResponseEntity
             .status(HttpStatus.NO_CONTENT)
             .build()
 
-        fun conflict(): ResponseEntity<Void> = ResponseEntity
+        fun conflict(): ResponseEntity<Unit> = ResponseEntity
             .status(HttpStatus.CONFLICT)
             .build()
     }

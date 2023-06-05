@@ -18,7 +18,7 @@ class AuthController(private val authService: AuthService) {
     ): ResponseEntity<JwtTokenResponse> = ResponseDto.ok(this.authService.refresh(refreshToken))
 
     @GetMapping("/logout")
-    fun logout(@RequestHeader("Authorization") token: String): ResponseEntity<Void> {
+    fun logout(@RequestHeader("Authorization") token: String): ResponseEntity<Unit> {
         this.authService.revokeToken(token)
         return ResponseDto.noContent()
     }

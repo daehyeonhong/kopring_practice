@@ -1,18 +1,15 @@
 package com.practice.kopring.common.domain
 
 import com.github.f4b6a3.ulid.UlidCreator
-import jakarta.persistence.Column
-import jakarta.persistence.Id
-import jakarta.persistence.MappedSuperclass
-import jakarta.persistence.PostLoad
-import jakarta.persistence.PostPersist
-import java.io.Serializable
-import java.time.LocalDateTime
-import java.util.*
+import jakarta.persistence.*
 import org.hibernate.proxy.HibernateProxy
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.domain.Persistable
+import java.io.Serializable
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.jvm.Transient
 
 @MappedSuperclass
 abstract class PrimaryKeyEntity : Persistable<UUID> {
