@@ -10,8 +10,10 @@ Configuration:
         value: "%date{yyyy-MM-dd}"
       - name: time-format
         value: "[%date{ABSOLUTE}:%-5relative]"
+      - name: date-time-format
+        value: "[${date-format}%date{ABSOLUTE}:%-5relative]"
       - name: console-pattern
-        value: "[%highlight{%-5level}] %cyan{${time-format}}[%blue{%thread}] %magenta{%C{1.}}: %msg%n%throwable"
+        value: "[%highlight{%-5level}] %cyan{${date-time-format}} %magenta{%C{1.}}: %msg%n%throwable"
       - name: file-pattern
         value: "[%-5level] ${time-format}[%thread] %C{1.}: %msg%n%throwable"
 
