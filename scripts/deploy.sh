@@ -1,11 +1,15 @@
 #!/bin/bash
 
 cd /home/ec2-user/app
-
 DOCKER_APP_NAME=spring
+REDIS_CONTAINER_NAME=redis-container
 
-sudo docker-compose -p redis-container -f docker-compose.redis.yml up -d --build
-
+# Redis 컨테이너 실행 확인 및 실행
+EXIST_REDIS=$(sudo docker ps | grep $REDIS_CONTAINER_NAME)
+if [ -z "$EXIST_REDIS" ]; then
+  echo "Redis 컨테이너를 실행합니다."
+  sudo docker-compose -f docker-compose.redis.yml up -d --build
+fi
 EXIST_BLUE=$(sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
 echo "배포 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
 
