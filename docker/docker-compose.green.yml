@@ -7,11 +7,6 @@ services:
     container_name: spring-green
     networks:
       - spring-network
-  redis:
-    image: "redis:latest"
-    container_name: redis-container
-    networks:
-      - spring-network
 networks:
   spring-network:
     external: true
