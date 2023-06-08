@@ -5,6 +5,14 @@ services:
     ports:
       - "8081:8080"
     container_name: spring-blue
+    networks:
+      - spring-network
+  redis:
+    image: "redis:latest"
+    container_name: redis-container
+    networks:
+      - spring-network
+
 networks:
   spring-network:
     driver: bridge
