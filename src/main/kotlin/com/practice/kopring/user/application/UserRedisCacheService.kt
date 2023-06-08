@@ -2,9 +2,9 @@ package com.practice.kopring.user.application
 
 import com.practice.kopring.auth.dto.RefreshToken
 import com.practice.kopring.user.enumerate.UserRedisKey
-import java.util.concurrent.TimeUnit
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service
+import java.util.concurrent.TimeUnit
 
 @Service
 class UserRedisCacheService(

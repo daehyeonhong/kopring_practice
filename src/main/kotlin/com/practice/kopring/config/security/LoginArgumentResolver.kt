@@ -4,7 +4,6 @@ import com.practice.kopring.auth.dto.AuthInfo
 import com.practice.kopring.auth.dto.AuthUser
 import com.practice.kopring.common.exception.oauth.NotExistsOauthInfoException
 import com.practice.kopring.user.enumerate.Role
-import java.util.*
 import org.springframework.core.MethodParameter
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
@@ -14,6 +13,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory
 import org.springframework.web.context.request.NativeWebRequest
 import org.springframework.web.method.support.HandlerMethodArgumentResolver
 import org.springframework.web.method.support.ModelAndViewContainer
+import java.util.*
 
 @Component
 class LoginArgumentResolver : HandlerMethodArgumentResolver {

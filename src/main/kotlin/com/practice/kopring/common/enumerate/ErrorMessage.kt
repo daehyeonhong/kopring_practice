@@ -1,11 +1,7 @@
 package com.practice.kopring.common.enumerate
 
 import org.springframework.http.HttpStatus
-import org.springframework.http.HttpStatus.BAD_REQUEST
-import org.springframework.http.HttpStatus.CONFLICT
-import org.springframework.http.HttpStatus.FORBIDDEN
-import org.springframework.http.HttpStatus.NOT_FOUND
-import org.springframework.http.HttpStatus.UNAUTHORIZED
+import org.springframework.http.HttpStatus.*
 
 enum class ErrorMessage(
     val status: HttpStatus, val description: String,

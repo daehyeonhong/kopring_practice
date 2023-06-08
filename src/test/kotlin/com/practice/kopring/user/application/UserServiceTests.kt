@@ -7,7 +7,6 @@ import com.practice.kopring.user.enumerate.Role
 import com.practice.kopring.user.infrastructure.UserRepository
 import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceException
-import java.util.*
 import org.apache.logging.log4j.kotlin.Logging
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -15,6 +14,7 @@ import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Transactional
 @SpringBootTest

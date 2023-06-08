@@ -1,6 +1,5 @@
 package com.practice.kopring.user.enumerate
 
-import com.practice.kopring.user.enumerate.UserRedisKey
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test

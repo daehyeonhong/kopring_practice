@@ -1,9 +1,9 @@
 package com.practice.kopring.common
 
+import org.junit.jupiter.api.Test
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.util.*
-import org.junit.jupiter.api.Test
 
 class CommonTest {
     @Test
