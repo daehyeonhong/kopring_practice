@@ -5,6 +5,5 @@ services:
     ports:
       - "8081:8080"
     container_name: spring-blue
-networks:
-  spring-network:
-    driver: bridge
+    networks:
+      - spring-network

@@ -5,6 +5,5 @@ services:
     ports:
       - "8082:8080"
     container_name: spring-green
-networks:
-  spring-network:
-    driver: bridge
+    networks:
+      - spring-network
