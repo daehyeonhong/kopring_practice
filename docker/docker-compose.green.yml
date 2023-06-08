@@ -12,7 +12,6 @@ services:
     container_name: redis-container
     networks:
       - spring-network
-
 networks:
   spring-network:
-    driver: bridge
+    external: true
