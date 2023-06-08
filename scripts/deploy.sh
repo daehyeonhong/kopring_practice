@@ -4,6 +4,8 @@ cd /home/ec2-user/app
 
 DOCKER_APP_NAME=spring
 
+sudo docker-compose -p redis-container -f docker-compose.redis.yml up -d --build
+
 EXIST_BLUE=$(sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
 echo "배포 시작일자 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
 
@@ -15,7 +17,6 @@ if [ -z "$EXIST_BLUE" ]; then
 
   sleep 30
 
-  sudo docker network connect spring-network ${DOCKER_APP_NAME}-blue
   echo "green 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
 
   sudo docker-compose -p ${DOCKER_APP_NAME}-green -f docker-compose.green.yml down
@@ -30,7 +31,6 @@ else
 
   sleep 30
 
-  sudo docker network connect spring-network ${DOCKER_APP_NAME}-green
   echo "blue 중단 시작 : $(date +%Y)-$(date +%m)-$(date +%d) $(date +%H):$(date +%M):$(date +%S)" >>/home/ec2-user/deploy.log
   sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml down
   sudo docker image prune -af
