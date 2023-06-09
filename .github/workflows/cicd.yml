@@ -10,18 +10,20 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    services:
+      redis:
+        image: redis
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-
-      - name: Setup Redis
-        uses: zhulik/redis-action@1.1.0
-        with:
-          redis version: '5'
-          number of databases: 100
 
       - name: gradle caching
         uses: actions/cache@v3
