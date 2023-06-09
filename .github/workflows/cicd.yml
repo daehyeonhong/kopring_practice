@@ -13,7 +13,7 @@ jobs:
     services:
       redis:
         image: redis
-        container-name: redis-container
+        container_name: redis-container
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
