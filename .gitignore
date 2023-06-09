@@ -38,3 +38,6 @@ out/
 
 src/main/resources/application-*.yml
 /src/main/resources/static/docs/
+
+DS_Store
+actions-runner/
