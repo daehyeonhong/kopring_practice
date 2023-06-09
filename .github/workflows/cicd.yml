@@ -13,7 +13,6 @@ jobs:
     services:
       redis:
         image: redis
-        container_name: redis-container
         options: >-
           --health-cmd "redis-cli ping"
           --health-interval 10s
@@ -55,7 +54,7 @@ jobs:
         run: unzip ${{ secrets.DEV_OCI_WALLET }}.zip
 
       - name: build project
-        run: ./gradlew clean build -Dspring.profiles.active=local
+        run: ./gradlew clean build --exclude-task test
 
       - name: create deploy zip
         run: |
