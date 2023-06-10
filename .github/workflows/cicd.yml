@@ -56,7 +56,9 @@ jobs:
         run: unzip ${{ secrets.DEV_OCI_WALLET }}.zip
 
       - name: build project
-        run: ./gradlew build
+        run: ./gradlew clean build -i
+        env:
+          SPRING_PROFILES_ACTIVE: build
 
       - name: create deploy zip
         run: |
