@@ -16,7 +16,6 @@ jobs:
         ports:
           - 6379:6379
         options: >-
-          --entrypoint redis-server
           --health-cmd "redis-cli ping"
           --health-interval 10s
           --health-timeout 5s
@@ -55,6 +54,12 @@ jobs:
 
       - name: unzip wallet files
         run: unzip ${{ secrets.DEV_OCI_WALLET }}.zip
+
+      - name: Wait for Redis
+        run: |
+          while ! nc -z localhost 6379; do
+            sleep 1
+          done
 
       - name: build project
         run: ./gradlew clean build -i
