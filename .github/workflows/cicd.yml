@@ -54,7 +54,7 @@ jobs:
         run: unzip ${{ secrets.DEV_OCI_WALLET }}.zip
 
       - name: build project
-        run: ./gradlew clean build --exclude-task test
+        run: ./gradlew clean build
 
       - name: create deploy zip
         run: |
