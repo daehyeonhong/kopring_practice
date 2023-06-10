@@ -55,9 +55,6 @@ jobs:
       - name: unzip wallet files
         run: unzip ${{ secrets.DEV_OCI_WALLET }}.zip
 
-      - name: Set up Redis
-        run: echo "spring.redis.host=redis" >> $GITHUB_ENV
-
       - name: build project
         run: ./gradlew build
         env:
