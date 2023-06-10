@@ -55,12 +55,13 @@ jobs:
       - name: unzip wallet files
         run: unzip ${{ secrets.DEV_OCI_WALLET }}.zip
 
+      - name: Set up Redis
+        run: echo "spring.redis.host=redis" >> $GITHUB_ENV
+
       - name: build project
         run: ./gradlew clean build -i
         env:
           SPRING_PROFILES_ACTIVE: build
-          SPRING_DATA_REDIS_HOST: redis
-          SPRING_DATA_REDIS_PORT: 6379
 
       - name: create deploy zip
         run: |
