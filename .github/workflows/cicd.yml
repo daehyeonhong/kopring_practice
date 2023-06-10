@@ -20,6 +20,12 @@ jobs:
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
+        networks:
+          - github_network
+
+    networks:
+      github_network:
+        name: github_network
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-java@v3
