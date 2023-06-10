@@ -59,9 +59,9 @@ jobs:
         run: echo "spring.redis.host=redis" >> $GITHUB_ENV
 
       - name: build project
-        run: ./gradlew clean build -i
+        run: ./gradlew build
         env:
-          SPRING_PROFILES_ACTIVE: build
+          SPRING_PROFILES_ACTIVE: local
 
       - name: create deploy zip
         run: |
