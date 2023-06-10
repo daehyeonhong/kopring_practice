@@ -61,7 +61,7 @@ jobs:
       - name: build project
         run: ./gradlew build
         env:
-          SPRING_PROFILES_ACTIVE: local
+          SPRING_PROFILES_ACTIVE: build
 
       - name: create deploy zip
         run: |
