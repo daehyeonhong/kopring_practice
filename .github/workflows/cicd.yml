@@ -59,6 +59,8 @@ jobs:
         run: ./gradlew clean build -i
         env:
           SPRING_PROFILES_ACTIVE: build
+          REDIS_HOST: redis
+          REDIS_PORT: 6379
 
       - name: create deploy zip
         run: |
