@@ -55,18 +55,12 @@ jobs:
       - name: unzip wallet files
         run: unzip ${{ secrets.DEV_OCI_WALLET }}.zip
 
-      - name: Wait for Redis
-        run: |
-          while ! nc -z localhost 6379; do
-            sleep 1
-          done
-
       - name: build project
         run: ./gradlew clean build -i
         env:
           SPRING_PROFILES_ACTIVE: build
-          REDIS_HOST: redis
-          REDIS_PORT: 6379
+          SPRING_DATA_REDIS_HOST: redis
+          SPRING_DATA_REDIS_PORT: 6379
 
       - name: create deploy zip
         run: |
