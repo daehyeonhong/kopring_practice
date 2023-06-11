@@ -9,9 +9,9 @@ Configuration:
       - name: date-format
         value: "%date{yyyy-MM-dd}"
       - name: time-format
-        value: "[%date{ABSOLUTE}:%-5relative]"
+        value: "%date{ABSOLUTE}:%-5relative"
       - name: date-time-format
-        value: "[${date-format} %date{ABSOLUTE}:%-5relative]"
+        value: "[${date-format} ${time-format}]"
       - name: console-pattern
         value: "[%highlight{%-5level}] %cyan{${date-time-format}} %magenta{%C{1.}}: %msg%n%throwable"
       - name: file-pattern
