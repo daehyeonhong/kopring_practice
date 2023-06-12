@@ -16,6 +16,8 @@ import org.springframework.security.oauth2.client.authentication.OAuth2Authentic
 import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
+import org.springframework.web.util.UriComponentsBuilder
+import java.net.URI
 
 @Component
 class OAuth2SuccessHandler(
@@ -66,6 +68,13 @@ class OAuth2SuccessHandler(
                 .maxAge(this.jwtTokenProvider.refreshTokenExpireTime().toLong())
                 .build().toString()
         )
-        response.sendRedirect(this.redirectUrl)
+
+
+        response.sendRedirect(
+            UriComponentsBuilder.fromUri(URI(this.redirectUrl))
+                .queryParam("access_token", accessToken)
+                .queryParam("refresh_token", refreshToken)
+                .build(true).toString()
+        )
     }
 }
