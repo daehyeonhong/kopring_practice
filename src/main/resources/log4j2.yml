@@ -21,11 +21,6 @@ Configuration:
     Console:
       name: Console_Appender
       target: SYSTEM_OUT
-      JsonLayout:
-        charset: UTF-8
-        eventEol: true
-        compact: true
-        complete: false
       PatternLayout:
         alwaysWriteExceptions: true
         charset: UTF-8

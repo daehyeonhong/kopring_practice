@@ -1,6 +1,7 @@
 #!/bin/bash
 
 cd /home/ec2-user/app
+
 DOCKER_APP_NAME=spring
 
 EXIST_BLUE=$(sudo docker-compose -p ${DOCKER_APP_NAME}-blue -f docker-compose.blue.yml ps | grep Up)
