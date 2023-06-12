@@ -20,7 +20,8 @@ class UserEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    var provider: Provider
+    var provider: Provider,
+    oAuth2Id: String
 ) : PrimaryKeyEntity() {
 
     @Column(nullable = false)
@@ -29,6 +30,10 @@ class UserEntity(
 
     @Column(unique = true, nullable = false)
     var email = email
+        protected set
+
+    @Column(nullable = false)
+    var oAuth2Id: String = oAuth2Id
         protected set
 
     fun loginUpdate(

@@ -6,6 +6,7 @@ import com.practice.kopring.user.dto.OAuthAttributes
 import com.practice.kopring.user.enumerate.Provider
 import com.practice.kopring.user.enumerate.Role
 import com.practice.kopring.user.infrastructure.UserRepository
+import org.apache.logging.log4j.kotlin.Logging
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Service
 class CustomOAuth2UserService(
     private val userRepository: UserRepository,
 ) : OAuth2UserService<OAuth2UserRequest, OAuth2User> {
+    companion object : Logging
 
     override fun loadUser(userRequest: OAuth2UserRequest?): OAuth2User {
         userRequest ?: throw OAuth2AuthenticationException("Error")
@@ -55,7 +57,8 @@ class CustomOAuth2UserService(
                         email = email,
                         picture = picture,
                         role = Role.USER,
-                        provider = provider
+                        provider = provider,
+                        oAuth2Id = data["sub"] as String
                     )
                 )
             }

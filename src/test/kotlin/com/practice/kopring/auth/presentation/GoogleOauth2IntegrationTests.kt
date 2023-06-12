@@ -67,7 +67,8 @@ class GoogleOauth2IntegrationTests {
             email = email,
             picture = "test_picture",
             role = Role.USER,
-            provider = Provider.GOOGLE
+            provider = Provider.GOOGLE,
+            oAuth2Id = "123456789"
         )
         Mockito.`when`(oAuth2UserService.loadUser(Mockito.any())).thenReturn(oAuth2User)
         Mockito.`when`(userRepository.findByEmail(email)).thenReturn(userEntity)

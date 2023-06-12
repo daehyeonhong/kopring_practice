@@ -35,7 +35,8 @@ class UserServiceTests(
             email = "gaeddong@gaeddong.com",
             picture = "qwrqw/qdqd.qwd.com",
             role = Role.USER,
-            provider = Provider.GOOGLE
+            provider = Provider.GOOGLE,
+            oAuth2Id = "123456789"
         )
         val savedEntity: UserEntity = this.userRepository.save(gaeddongs)
         val id: UUID = savedEntity.id
@@ -57,7 +58,8 @@ class UserServiceTests(
             email = "gaeddong@gaeddong.com",
             picture = "qwrqw/qdqd.qwd.com",
             role = Role.USER,
-            provider = Provider.GOOGLE
+            provider = Provider.GOOGLE,
+            oAuth2Id = "123456789"
         )
         val savedEntity: UserEntity = this.userRepository.save(gaeddongs)
         val id: UUID = savedEntity.id
@@ -78,7 +80,8 @@ class UserServiceTests(
             email = "soddong@gaeddong.com",
             picture = "qwrqw/qdqd.qwd.com",
             role = Role.USER,
-            provider = Provider.GOOGLE
+            provider = Provider.GOOGLE,
+            oAuth2Id = "123456789"
         )
 
         val souddongs: UserEntity = UserEntity(
@@ -86,7 +89,8 @@ class UserServiceTests(
             email = "soddong@gaeddong.com",
             picture = "qwrqw/qdqd.qwd.com",
             role = Role.USER,
-            provider = Provider.GOOGLE
+            provider = Provider.GOOGLE,
+            oAuth2Id = "123456789"
         )
 
         this.userRepository.save(soddongs)
