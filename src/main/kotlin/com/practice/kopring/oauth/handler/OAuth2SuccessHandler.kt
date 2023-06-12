@@ -71,7 +71,7 @@ class OAuth2SuccessHandler(
 
 
         response.sendRedirect(
-            UriComponentsBuilder.fromUri(URI(this.redirectUrl))
+            UriComponentsBuilder.fromUri(URI("${this.redirectUrl}/${provider}"))
                 .queryParam("access_token", accessToken)
                 .queryParam("refresh_token", refreshToken)
                 .build(true).toString()
