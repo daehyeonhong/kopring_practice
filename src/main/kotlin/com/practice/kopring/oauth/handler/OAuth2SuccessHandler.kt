@@ -2,8 +2,6 @@ package com.practice.kopring.oauth.handler
 
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.auth.dto.RefreshToken
-import com.practice.kopring.auth.enumerate.Token
-import com.practice.kopring.common.util.CookieUtils
 import com.practice.kopring.user.application.CustomOAuth2UserService
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.application.UserService
@@ -12,6 +10,7 @@ import com.practice.kopring.user.enumerate.Provider
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.http.ResponseCookie
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
 import org.springframework.security.oauth2.core.user.OAuth2User
@@ -49,16 +48,24 @@ class OAuth2SuccessHandler(
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
 
-        CookieUtils.addCookie(
-            response, Token.ACCESS_TOKEN.value, accessToken,
-            this.jwtTokenProvider.getExpiration(accessToken).toInt()
+        response.addHeader(
+            "Set-Cookie",
+            ResponseCookie.from("refresh_cookie", refreshToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(this.jwtTokenProvider.refreshTokenExpireTime().toLong())
+                .build().toString()
         )
-
-        CookieUtils.addCookie(
-            response, Token.REFRESH_TOKEN.value, refreshToken,
-            this.jwtTokenProvider.getExpiration(refreshToken).toInt()
+        response.addHeader(
+            "Set-Cookie",
+            ResponseCookie.from("access_cookie", accessToken)
+                .httpOnly(true)
+                .secure(true)
+                .path("/")
+                .maxAge(this.jwtTokenProvider.refreshTokenExpireTime().toLong())
+                .build().toString()
         )
-
         response.sendRedirect(this.redirectUrl)
     }
 }
