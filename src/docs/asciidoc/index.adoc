@@ -1,0 +1,15 @@
+= restDocs
+
+:toc: left
+:toclevels: 3
+:sectlinks:
+:docktype: book
+:source-highlighter: highlightjs
+:icons: font
+:source-language: java
+:highlightjs-theme: github
+:highlightjs-languages: java,xml,html,css,js,http
+:docs: src/docs/asciidoc
+
+include::./oauth2/oauth2.adoc[]
+include::./auth/auth.adoc[]

@@ -1,0 +1,37 @@
+== 계정권한
+
+=== 계정권한은 계정의 권한을 설정하는 기능입니다.
+
+[stem]
+==== 기본헤더
+
+.HTTP Request
+include::{snippets}/auth-controller-mock-test/header/http-request.adoc[]
+.HTTP Response
+include::{snippets}/auth-controller-mock-test/header/http-response.adoc[]
+
+==== 토큰갱신
+
+.HTTP Request
+include::{snippets}/auth-controller-mock-test/refresh-token/http-request.adoc[]
+.HTTP Response
+include::{snippets}/auth-controller-mock-test/refresh-token/http-response.adoc[]
+.Response Body
+include::{snippets}/auth-controller-mock-test/refresh-token/response-body.adoc[]
+.Fields
+include::{snippets}/auth-controller-mock-test/refresh-token/response-fields.adoc[]
+.CURL Request
+include::{snippets}/auth-controller-mock-test/refresh-token/curl-request.adoc[]
+.HTTPie Request
+include::{snippets}/auth-controller-mock-test/refresh-token/httpie-request.adoc[]
+
+==== 로그아웃
+
+.HTTP Request
+include::{snippets}/auth-controller-mock-test/logout/http-request.adoc[]
+.HTTP Response
+include::{snippets}/auth-controller-mock-test/logout/http-response.adoc[]
+.CURL Request
+include::{snippets}/auth-controller-mock-test/logout/curl-request.adoc[]
+.HTTPie Request
+include::{snippets}/auth-controller-mock-test/logout/httpie-request.adoc[]
