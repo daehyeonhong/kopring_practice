@@ -10,18 +10,22 @@ spring:
         - oauth-local
         - database-local
         - security-local
+        - log-local
       build:
         - oauth-build
         - database-build
         - security-build
+        - log-build
       dev:
         - oauth-dev
         - database-dev
         - security-dev
+        - log-dev
       prd:
         - oauth-prd
         - database-prd
         - security-prd
+        - log-prd
     include:
       - database
       - oauth
