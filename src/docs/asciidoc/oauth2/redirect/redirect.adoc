@@ -1,7 +1,0 @@
-==== 로그인성공
-
-[stem]
-.HTTP Request
-include::http-request.adoc[]
-.HTTP Response
-include::http-response.adoc[]
