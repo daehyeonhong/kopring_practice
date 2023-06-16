@@ -2,18 +2,16 @@ package com.practice.kopring.oauth.handler
 
 import com.practice.kopring.auth.application.JwtTokenProvider
 import com.practice.kopring.auth.dto.RefreshToken
+import com.practice.kopring.common.util.CookieUtils
 import com.practice.kopring.user.application.CustomOAuth2UserService
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.application.UserService
-import com.practice.kopring.user.domain.UserEntity
 import com.practice.kopring.user.enumerate.Provider
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
-import org.springframework.http.ResponseCookie
 import org.springframework.security.core.Authentication
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken
-import org.springframework.security.oauth2.core.user.OAuth2User
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
 import org.springframework.stereotype.Component
 import org.springframework.web.util.UriComponentsBuilder
@@ -31,50 +29,37 @@ class OAuth2SuccessHandler(
     override fun onAuthenticationSuccess(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        authentication: Authentication?,
+        authentication: Authentication,
     ) {
-        val oAuth2User: OAuth2User = authentication?.principal as OAuth2User
+        val authenticationToken = authentication as? OAuth2AuthenticationToken
+        val oAuth2User = authenticationToken?.principal
+        val email = oAuth2User?.attributes?.get("email") as? String
+        val provider = authenticationToken?.authorizedClientRegistrationId
 
-        val email: String = oAuth2User.attributes["email"] as String
-        val provider: String = (authentication as OAuth2AuthenticationToken).authorizedClientRegistrationId
-        this.oAuth2UserService.saveOrUpdate(oAuth2User, Provider.of(provider))
+        if (email != null && provider != null) {
+            this.oAuth2UserService.saveOrUpdate(oAuth2User, Provider.of(provider))
+            val user = this.userService.findByEmail(email)
 
-        val user: UserEntity = this.userService.findByEmail(email)
+            val id = user.id.toString()
+            val accessToken = this.jwtTokenProvider.createAccessToken(id, user.role)
+            val refreshToken = this.jwtTokenProvider.createRefreshToken(id)
 
-        val id: String = user.id.toString()
-        val accessToken: String = this.jwtTokenProvider.createAccessToken(id, user.role)
-        val refreshToken: String = this.jwtTokenProvider.createRefreshToken(id)
+            val refreshTokenExpireTime = this.jwtTokenProvider.refreshTokenExpireTime()
 
-        this.userRedisCacheService.save(
-            RefreshToken(refreshToken, id),
-            this.jwtTokenProvider.refreshTokenExpireTime()
-        )
+            this.userRedisCacheService.save(RefreshToken(refreshToken, id), refreshTokenExpireTime)
 
-        response.addHeader(
-            "Set-Cookie",
-            ResponseCookie.from("refresh_cookie", refreshToken)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(this.jwtTokenProvider.refreshTokenExpireTime().toLong())
-                .build().toString()
-        )
-        response.addHeader(
-            "Set-Cookie",
-            ResponseCookie.from("access_cookie", accessToken)
-                .httpOnly(true)
-                .secure(true)
-                .path("/")
-                .maxAge(this.jwtTokenProvider.refreshTokenExpireTime().toLong())
-                .build().toString()
-        )
+            val accessCookie = CookieUtils.addCookie("access_cookie", accessToken, refreshTokenExpireTime).toString()
+            val refreshCookie = CookieUtils.addCookie("refresh_cookie", refreshToken, refreshTokenExpireTime).toString()
 
+            response.addHeader("Set-Cookie", accessCookie)
+            response.addHeader("Set-Cookie", refreshCookie)
 
-        response.sendRedirect(
-            UriComponentsBuilder.fromUri(URI("${this.redirectUrl}/${provider}"))
+            val redirectUrl = UriComponentsBuilder.fromUri(URI("$redirectUrl/$provider"))
                 .queryParam("access_token", accessToken)
                 .queryParam("refresh_token", refreshToken)
                 .build(true).toString()
-        )
+
+            response.sendRedirect(redirectUrl)
+        }
     }
 }
