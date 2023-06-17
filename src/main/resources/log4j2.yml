@@ -13,25 +13,16 @@ Configuration:
     Console:
       name: Console_Appender
       target: SYSTEM_OUT
-      JsonLayout:
-        compact: true
-        eventEol: true
-        charset: UTF-8
-    File:
-      name: File_Appender
-      fileName: ${log-path}/application.log
-      JsonLayout:
-        compact: true
-        eventEol: true
-        charset: UTF-8
+      PatternLayout:
+        Pattern: "%d{ISO8601} [%t] {%-5level} %logger - %msg%n%throwable"
+        Charset: "UTF-8"
     RollingFile:
       name: RollingFile_Appender
       fileName: ${log-path}/application_rolling.log
       filePattern: ${log-path}/archive/${date-format}/application_rolling-%i.log.gz
-      JsonLayout:
-        compact: true
-        eventEol: true
-        charset: UTF-8
+      PatternLayout:
+        Pattern: "%d{ISO8601} [%t] %-5level %logger{36} - %msg%n%throwable"
+        Charset: "UTF-8"
       Policies:
         TimeBasedTriggeringPolicy:
           interval: 1
@@ -46,7 +37,6 @@ Configuration:
       level: INFO
       AppenderRef:
         - ref: Console_Appender
-        - ref: File_Appender
         - ref: RollingFile_Appender
     Logger:
       - name: com.practice.kopring
@@ -54,7 +44,6 @@ Configuration:
         level: INFO
         AppenderRef:
           - ref: Console_Appender
-          - ref: File_Appender
           - ref: RollingFile_Appender
       - name: org.hibernate.type.descriptor.sql.BasicBinder
         additivity: false
