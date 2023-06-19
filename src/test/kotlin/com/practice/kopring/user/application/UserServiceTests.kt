@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceException
 import org.apache.logging.log4j.kotlin.Logging
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -18,12 +19,9 @@ import java.util.*
 
 @Transactional
 @SpringBootTest
-class UserServiceTests(
-    @Autowired
+class UserServiceTests @Autowired constructor(
     private val userService: UserService,
-    @Autowired
     private val userRepository: UserRepository,
-    @Autowired
     private val entityManager: EntityManager,
 ) {
     companion object logger : Logging
@@ -38,7 +36,7 @@ class UserServiceTests(
             provider = Provider.GOOGLE,
             oAuth2Id = "123456789"
         )
-        val savedEntity: UserEntity = this.userRepository.save(gaeddongs)
+        val savedEntity: UserEntity = this.userRepository.saveAndFlush(gaeddongs)
         val id: UUID = savedEntity.id
         val foundEntity: UserEntity = this.userService.findByEmail(email = gaeddongs.email)
         Assertions.assertEquals(foundEntity.id, id)
@@ -97,5 +95,15 @@ class UserServiceTests(
         entityManager.flush()
         this.userRepository.save(souddongs)
         assertThrows<PersistenceException> { entityManager.flush() }
+    }
+
+    @Test
+    @DisplayName(value = "회원정보 조회")
+    fun findById() {
+        //given
+
+        //when
+
+        //then
     }
 }
