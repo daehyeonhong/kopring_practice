@@ -9,6 +9,7 @@ import jakarta.persistence.EntityManager
 import jakarta.persistence.PersistenceException
 import org.apache.logging.log4j.kotlin.Logging
 import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -94,5 +95,15 @@ class UserServiceTests @Autowired constructor(
         entityManager.flush()
         this.userRepository.save(souddongs)
         assertThrows<PersistenceException> { entityManager.flush() }
+    }
+
+    @Test
+    @DisplayName(value = "회원정보 조회")
+    fun findById() {
+        //given
+
+        //when
+
+        //then
     }
 }

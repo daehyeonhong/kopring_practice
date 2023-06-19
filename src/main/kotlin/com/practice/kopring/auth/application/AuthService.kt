@@ -1,5 +1,6 @@
 package com.practice.kopring.auth.application
 
+import com.practice.kopring.auth.dto.JwtDto
 import com.practice.kopring.auth.dto.JwtTokenResponse
 import com.practice.kopring.auth.dto.RefreshToken
 import com.practice.kopring.auth.enumerate.Token
@@ -8,6 +9,7 @@ import com.practice.kopring.common.exception.auth.TokenInvalidException
 import com.practice.kopring.common.exception.user.NotExistsUserException
 import com.practice.kopring.user.application.UserRedisCacheService
 import com.practice.kopring.user.domain.UserEntity
+import com.practice.kopring.user.enumerate.Role
 import com.practice.kopring.user.infrastructure.UserRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -34,7 +36,7 @@ class AuthService(
         val newAccessToken: String = this.jwtTokenProvider.createAccessToken(user.id.toString(), user.role)
         val newRefreshToken: String = this.jwtTokenProvider.createRefreshToken(user.id.toString())
 
-        this.userRedisCacheService.save(
+        this.userRedisCacheService.saveRefreshToken(
             RefreshToken(newRefreshToken, user.id.toString()),
             this.jwtTokenProvider.refreshTokenExpireTime()
         )
@@ -61,5 +63,23 @@ class AuthService(
 
             else -> null
         }
+    }
+
+    fun findByOneTimeToken(oneTimeToken: String): String? =
+        this.userRedisCacheService.getUserIdWithOneTimeTokenToken(oneTimeToken)
+
+    fun revokeOneTimeToken(oneTimeToken: String) {
+        this.userRedisCacheService.deleteOneTimeToken(oneTimeToken)
+    }
+
+    fun createTokenWithUserId(userId: String): JwtDto {
+        val accessToken = this.jwtTokenProvider.createAccessToken(userId, Role.USER)
+        val refreshToken = this.jwtTokenProvider.createRefreshToken(userId)
+        return JwtDto(
+            Role.USER.key,
+            accessToken,
+            refreshToken,
+            this.jwtTokenProvider.refreshTokenExpireTime()
+        )
     }
 }
