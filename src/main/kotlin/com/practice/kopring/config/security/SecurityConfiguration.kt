@@ -32,7 +32,7 @@ class SecurityConfiguration(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
                 it.requestMatchers(CorsUtils::isPreFlightRequest).permitAll()
-                it.requestMatchers("/users/login", "/users/failure", "/auth/refresh").permitAll()
+                it.requestMatchers("/users/login", "/users/failure", "/auth/refresh", "/auth/accessToken").permitAll()
 //                it.requestMatchers(HttpMethod.GET, "/users").permitAll()
                 it.anyRequest().hasRole(Role.USER.name)
             }

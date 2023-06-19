@@ -44,7 +44,7 @@ class AuthControllerRestAssuredTests(
         val accessToken: String = this.auth0JwtTokenProvider.createAccessToken(this.userId, Role.USER)
         logger.info("${Token.ACCESS_TOKEN.name}: ${accessToken}")
         val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken(this.userId)
-        this.userRedisCacheService.save(RefreshToken(refreshToken, this.userId), 1000 * 60 * 60 * 24 * 7)
+        this.userRedisCacheService.saveRefreshToken(RefreshToken(refreshToken, this.userId), 1000 * 60 * 60 * 24 * 7)
 
         val response = RestAssured.given(spec).log().all()
             .`when`().filter(
@@ -66,7 +66,7 @@ class AuthControllerRestAssuredTests(
     @Test
     fun refresh(): Unit {
         val refreshToken: String = this.auth0JwtTokenProvider.createRefreshToken(this.userId)
-        this.userRedisCacheService.save(RefreshToken(refreshToken, this.userId), 1000 * 60 * 60 * 24 * 7)
+        this.userRedisCacheService.saveRefreshToken(RefreshToken(refreshToken, this.userId), 1000 * 60 * 60 * 24 * 7)
         val response = RestAssured.given(spec).log().all()
             .`when`().filter(
                 RestAssuredRestDocumentation.document(

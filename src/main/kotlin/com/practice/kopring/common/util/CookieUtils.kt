@@ -1,31 +1,37 @@
 package com.practice.kopring.common.util
 
-import com.practice.kopring.auth.enumerate.Token
 import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.http.ResponseCookie
 
-class CookieUtils {
-    companion object {
-        private fun getCookie(request: HttpServletRequest, name: String): Cookie? =
-            request.cookies?.firstOrNull { it.name == name }
+object CookieUtils {
+    fun getCookie(request: HttpServletRequest, name: String): Cookie? {
+        val cookies = request.cookies ?: return null
+        return cookies.find { it.name == name }
+    }
 
-        private fun deleteCookie(vararg names: String): Unit = names.forEach(this::addCookie)
-
-        fun addCookie(
-            name: String,
-            value: String = "",
-            maxAge: Long = 0
-        ): ResponseCookie = ResponseCookie.from(name, value)
-            .secure(true)
+    fun addCookie(
+        name: String,
+        value: String,
+        maxAge: Long
+    ): ResponseCookie =
+        ResponseCookie.from(name, value)
             .httpOnly(true)
             .path("/")
             .maxAge(maxAge)
             .build()
 
-        fun clearTokenCookies(response: HttpServletResponse): Unit {
-            deleteCookie(Token.ACCESS_TOKEN.value, Token.REFRESH_TOKEN.value)
-        }
+    fun deleteCookie(
+        response: HttpServletResponse,
+        name: String
+    ) {
+        val cookie = Cookie(name, "")
+        cookie.path = "/"
+        cookie.maxAge = 0
+        response.addCookie(cookie)
     }
+
+    fun getValue(request: HttpServletRequest, name: String): String? =
+        getCookie(request, name)?.value?.ifBlank { null }
 }
