@@ -18,6 +18,7 @@ object CookieUtils {
     ): ResponseCookie =
         ResponseCookie.from(name, value)
             .httpOnly(true)
+            .secure(true)
             .path("/")
             .maxAge(maxAge)
             .build()
