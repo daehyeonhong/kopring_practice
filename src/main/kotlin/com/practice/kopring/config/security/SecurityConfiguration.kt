@@ -28,6 +28,7 @@ class SecurityConfiguration(
     @Bean
     fun formLoginFilterChain(http: HttpSecurity): SecurityFilterChain {
         http.csrf { it.disable() }
+            .cors { it.disable() }
             .httpBasic { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
