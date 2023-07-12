@@ -10,6 +10,9 @@
 :highlightjs-theme: github
 :highlightjs-languages: java,xml,html,css,js,http
 :docs: src/docs/asciidoc
+:snippets: build/generated-snippets
 
-include::./oauth2/oauth2.adoc[]
-include::./auth/auth.adoc[]
+include::{snippets}/user-find/http-request.adoc[]
+include::{snippets}/user-find/http-response.adoc[]
+include::{snippets}/user-find/path-parameters.adoc[]
+include::{snippets}/user-find/response-fields.adoc[]
