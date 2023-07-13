@@ -14,7 +14,6 @@ import java.util.*
 class UserService(
     private val userRepository: UserRepository,
 ) {
-    @Transactional
     fun checkExistEmail(email: String): Boolean = this.userRepository.existsByEmail(email)
 
     fun findByEmail(email: String): UserEntity =
@@ -22,7 +21,7 @@ class UserService(
 
     fun findById(userId: String): UserDto.UserResponse =
         UserDto.UserResponse.of(
-            this.userRepository.findByIdOrNull(UUID.fromString(userId))
+            user = this.userRepository.findByIdOrNull(UUID.fromString(userId))
                 ?: throw NotExistsUserException()
         )
 }
