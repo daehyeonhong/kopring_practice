@@ -30,9 +30,6 @@ configurations {
     implementation {
         exclude("org.springframework.boot", "spring-boot-starter-logging")
     }
-    dependencies {
-        asciidoctorExt("org.springframework.restdocs:spring-restdocs-asciidoctor")
-    }
 }
 
 tasks {
@@ -40,27 +37,6 @@ tasks {
         enabled = false
     }
 }
-
-val snippetsDir: File by extra {
-    file("build/generated-snippets")
-}
-
-tasks {
-    val asciidoctorTask by registering(AsciidoctorTask::class) {
-        dependsOn(test)
-        attributes(mapOf("doctype" to "book"))
-        inputs.dir(snippetsDir)
-    }
-    val copyDocument by registering(Copy::class) {
-        dependsOn(asciidoctorTask)
-        from(asciidoctorTask.get().outputs.files.singleFile)
-        into("src/main/resources/static/docs")
-    }
-    bootJar {
-        dependsOn(copyDocument)
-    }
-}
-
 repositories {
     mavenCentral()
 }
@@ -102,6 +78,7 @@ dependencies {
     testImplementation("org.springframework.security:spring-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.springframework.restdocs:spring-restdocs-mockmvc")
+    testImplementation("org.springframework.restdocs:spring-restdocs-asciidoctor")
     testImplementation("org.springframework.restdocs:spring-restdocs-restassured")
     testImplementation("org.mockito.kotlin:mockito-kotlin:3.2.0")
     testImplementation("io.rest-assured:rest-assured")
@@ -114,8 +91,28 @@ tasks.withType<KotlinCompile> {
     }
 }
 
+val snippetsDir: File = file(path = "build/generated-snippets")
+
 tasks.withType<Test> {
     useJUnitPlatform()
+    outputs.dir(snippetsDir)
+}
+
+tasks {
+    val asciidoctor by existing(AsciidoctorTask::class) {
+        inputs.dir(snippetsDir)
+        configurations(asciidoctorExt)
+        dependsOn("test")
+        attributes(mapOf("doctype" to "book"))
+    }
+    val copyDocument by registering(Copy::class) {
+        dependsOn(asciidoctor)
+        from(asciidoctor.get().outputDir)
+        into("static/docs")
+    }
+    bootJar {
+        dependsOn(copyDocument)
+    }
 }
 
 tasks.test {
