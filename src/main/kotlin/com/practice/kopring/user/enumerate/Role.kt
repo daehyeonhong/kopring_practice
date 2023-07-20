@@ -10,6 +10,6 @@ enum class Role(
     USER(key = "ROLE_USER", title = "일반 사용자");
 
     companion object {
-        fun of(authority: String?): Role = values().find { it.key == authority } ?: throw InvalidUserRoleException()
+        fun of(authority: String?): Role = entries.find { it.key == authority } ?: throw InvalidUserRoleException()
     }
 }

@@ -9,6 +9,6 @@ enum class Provider(
 
     companion object {
         fun of(description: String?): Provider =
-            values().find { it.name.equals(description, true) } ?: NONE
+            entries.find { it.name.equals(description, true) } ?: NONE
     }
 }
