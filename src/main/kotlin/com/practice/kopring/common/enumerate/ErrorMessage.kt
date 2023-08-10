@@ -10,7 +10,8 @@ enum class ErrorMessage(
      * Common Error Code
      */
     INTERNAL_SERVER_ERROR(status = BAD_REQUEST, description = "예기치 못한 에러가 발생했습니다."),
-    INVALID_MAPPING(status = BAD_REQUEST, description = "mapper error가 발생했습니다."),
+    INVALID_MAPPING(status = BAD_REQUEST, description = "`MAPPER ERROR`가 발생했습니다."),
+    INVALID_PARAMETER(status = BAD_REQUEST, description = "유효하지 않은 파라미터입니다."),
 
     /**
      * User Error Code

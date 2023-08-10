@@ -35,7 +35,7 @@ class ProviderTest {
         ]
     )
     @DisplayName(value = "Provider.of(provider.title) with lower case 테스트")
-    fun providerOfLowerCaseTest(input: String, key: String): Unit {
+    fun providerOfLowerCaseTest(input: String, key: String) {
         val actual: Provider = Provider.of(input)
         assertThat(actual).isEqualTo(Provider.of(key))
     }

@@ -46,7 +46,6 @@ class GlobalExceptionHandler {
             exception.bindingResult
             "requestUrl: ${request.requestURL}"
         }
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
             ErrorDto(
                 "MethodArgumentNotValidException", exception.message
