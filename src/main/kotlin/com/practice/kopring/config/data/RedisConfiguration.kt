@@ -35,7 +35,7 @@ class RedisConfiguration(
         val template: RedisTemplate<ByteArray, ByteArray> = RedisTemplate<ByteArray, ByteArray>()
         template.keySerializer = StringRedisSerializer()
         template.valueSerializer = StringRedisSerializer()
-        template.setConnectionFactory(this.lettuceConnectionFactory())
+        template.connectionFactory = this.lettuceConnectionFactory()
         return template
     }
 
@@ -44,7 +44,7 @@ class RedisConfiguration(
         val stringRedisTemplate: StringRedisTemplate = StringRedisTemplate()
         stringRedisTemplate.keySerializer = StringRedisSerializer()
         stringRedisTemplate.valueSerializer = StringRedisSerializer()
-        stringRedisTemplate.setConnectionFactory(this.lettuceConnectionFactory())
+        stringRedisTemplate.connectionFactory = this.lettuceConnectionFactory()
         return stringRedisTemplate
     }
 }

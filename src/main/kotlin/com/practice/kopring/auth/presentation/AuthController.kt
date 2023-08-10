@@ -23,7 +23,7 @@ class AuthController(private val authService: AuthService) {
         return ResponseDto.noContent()
     }
 
-    @GetMapping("/accessToken")
+    @GetMapping(value = ["/accessToken"])
     fun fetchAccessToken(
         @RequestParam("oneTimeToken") oneTimeToken: String,
         response: HttpServletResponse
